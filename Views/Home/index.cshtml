@@ -1,0 +1,201 @@
+@*
+ /*
+
+
+@{
+    ViewData["Title"] = "تسجيل الدخول";
+}
+
+
+
+<div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="card shadow-lg p-4 rounded-4 login-card" style="max-width: 60rem; width: 100%;">
+        <div class="text-center mb-4">
+            <h2 class="fw-bold">تسجيل الدخول</h2>
+            <p class="text-muted">أدخل بيانات الدخول لتسجيل الدخول إلى حسابك</p>
+        </div>
+
+        <form id="loginForm">
+
+            <div class="mb-3">
+                <label for="userCompany" class="form-label">اسم الشركة</label>
+                <input type="text" class="form-control p-3 fs-5" id="userCompany"  placeholder="أدخل اسم الشركة" required>    
+            </div>
+
+            <div class="mb-3">
+                <label for="BranchId" class="form-label">اسم الفرع</label>
+                <select class="form-select custom-select-rtl p-3 fs-5" id="BranchId" required>
+                    <option value="" disabled selected>اختر الفرع</option>
+                    <option value="1">فرع 1</option>
+                    <option value="2">فرع 2</option>
+                    <option value="3">فرع 3</option>
+                </select>    
+            </div>
+
+            <div class="mb-3">
+                <label for="PosId" class="form-label">اسم النقطة</label>
+                <select class="form-select custom-select-rtl  p-3 fs-5" id="PosId" required>
+                    <option value="" disabled selected>اختر نقطة البيع</option>
+                    <option value="1">نقطة 1</option>
+                    <option value="2">نقطة 2</option>
+                    <option value="3">نقطة 3</option>
+                </select>    
+            </div>
+
+            <div class="mb-3">
+                <label for="username" class="form-label">اسم المستخدم</label>
+                <select class="form-select custom-select-rtl p-3 fs-5" id="username" required>
+                    <option value="" disabled selected>اختر المستخدم </option>
+                    <option value="1">المستخدم 1</option>
+                    <option value="2">المستخدم 2</option>
+                    <option value="3">المستخدم 3</option>
+                </select>   
+            </div>
+
+            <div class="mb-3">
+                <label for="password" class="form-label">كلمة المرور </label>
+                <input type="password" class="form-control p-3 fs-5" id="password" placeholder="أدخل كلمة المرور" required>
+            </div>
+
+            <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input bg-dark" id="showPassword">
+                <label class="form-check-label" for="showPassword">عرض كلمة المرور</label>
+            </div>
+
+            <a id="btnLogin" class="btn bg-custom text-light w-100 fs-5 p-3">دخول</a>
+        </form>
+        <p class="border border-2 text-danger p-3 mt-2 mb-2 fs-4 fw-bold text-center" id="MsgError">Test</p>
+        <div class="text-center mt-3">
+            <a href="#">هل نسيت الباسورد ؟</a>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+   <script src="~/JS/login.js"></script>
+}
+*/
+*@
+
+
+
+
+@{
+    ViewData["Title"] = "تسجيل الدخول - Al-Aoun POS";
+}
+
+@section Styles {  
+    
+    <link rel="stylesheet" href="~/css/index.css" />
+}
+
+
+<div class="container-fluid full-screen-container p-0">
+    <div class="row no-gutters h-100">
+        
+        <div class="col-md-6 d-none d-md-block login-image-column">
+            <div class="login-image-container">
+                <div class="brand-overlay">
+                    <h1 class="display-4 fw-bold">Al-Aoun POS</h1>
+                    <p class="fs-2 fw-bold bg-white">الحل المتكامل لإدارة نقطة البيع الخاصة بك</p>
+                    <span class="fs-2  text-white">    &copy; 2026 AL-Aoun Solutions . جميع الحقوق محفوظة. 00962790205293</span>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-12 login-form-column">
+            <div class="login-form-wrapper border">
+                
+                @* شعار صغير للشاشات الصغيرة *@
+                <div class="text-center d-md-none mb-4">
+                     <h1 class="fw-bold text-primary">Al-Aoun POS</h1>
+                </div>
+
+                <div class="text-center mb-5">
+                    <h2 class="fw-bold">تسجيل الدخول</h2>
+                    <p class="text-muted">أدخل بياناتك  لادارة مشروعك </p>
+                </div>
+
+                <form id="loginForm">
+                    <div class="mb-3">
+                        <label for="userCompany" class="form-label fw-bold">اسم الشركة</label>
+                        <div class="input-group">
+                            @* تم عكس الترتيب ليظهر الزر على اليسار في RTL *@
+                            <input type="text" class="form-control fs-5" id="userCompany" placeholder="مثال: شركة العون" required>
+                            <button class="btn bg-custom fs-5 text-white w-25" type="button" id="btnFetchData">
+                                جلب
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="row g-2 mb-3">
+                        <div class="col-sm-6">
+                            <label for="BranchId" class="form-label fw-bold">الفرع</label>
+                            <select class="form-select custom-select-rtl fs-5" id="BranchId" required>
+                                <option value="" disabled selected>اختر الفرع</option>
+                            </select>    
+                        </div>
+                        <div class="col-sm-6">
+                            <label for="PosId" class="form-label fw-bold">نقطة البيع</label>
+                            <select class="form-select custom-select-rtl fs-5" id="PosId" required>
+                                <option value="" disabled selected>اختر النقطة</option>
+                            </select>    
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="username" class="form-label fw-bold">اسم المستخدم</label>
+                        <select class="form-select custom-select-rtl fs-5" id="username" required>
+                            <option value="" disabled selected>اختر المستخدم </option>
+                        </select>   
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="password" class="form-label fw-bold ">كلمة المرور</label>
+                        <input type="password" class="form-control fs-5" id="password" placeholder="********" required>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="showPassword">
+                            <label class="form-check-label" for="showPassword">عرض كلمة المرور</label>
+                        </div>
+                        <a href="#" class="text-decoration-none text-primary fs-7">نسيت كلمة المرور؟</a>
+                    </div>
+
+                    <button type="button" id="btnLogin" class="btn bg-custom w-100 fs-5 shadow-sm text-white p-3">
+                       دخول للنظام
+                    </button>
+                </form>
+
+                <p class="text-danger mt-3 text-center d-none" id="MsgError"></p>
+            </div>
+        </div>
+
+    </div>
+</div>
+ @section scripts {
+     <script src="~/JS/apiService.js"></script>
+     <script src="~/JS/login.js"></script>
+ }
+@*
+
+@section scripts {
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+   <script src="~/JS/login.js"></script>
+   <script>
+       // مثال بسيط لكيفية عمل زر "جلب" لاحقاً
+       document.getElementById('btnFetchData').addEventListener('click', function() {
+           const company = document.getElementById('userCompany').value;
+           if(company) {
+               document.getElementById('fetchLoader').classList.remove('d-none');
+               // هنا تضع كود الـ Ajax الخاص بك لجلب الفروع والمستخدمين
+               console.log("جاري جلب بيانات الشركة: " + company);
+           } else {
+               alert("يرجى إدخال اسم الشركة أولاً");
+           }
+       });
+   </script>
+}
+*@

@@ -1,0 +1,63 @@
+@model IEnumerable<ALAoun_Pos.Models.ClsCustomers>; 
+
+@{
+    ViewData["Title"] = "العمــــلاء";
+}
+<div class="container mt-4">
+
+    <div class="row mb-3">
+        <div class="col-md-4">
+             <h1 class="mb-4 text-center">الزبائن</h1>
+        </div>
+        <div class="col-md-4">
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="/Customers/Create" class="btn btn-primary">إضافة زبون جديد</a>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>الرقم</th>
+                    <th>اسم الزبون</th>
+                    <th>الهاتف</th>
+                    <th>الإيميل</th>
+                    <th>العنوان</th>
+                    <th>الإجراءات</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var customer in Model)
+                {
+                    <tr>
+                        <td>@customer.CustomerId</td>
+                        <td>@customer.CustomerName</td>
+                        <td>@customer.Phone</td>
+                        <td>@customer.Email</td>
+                        <td>@customer.Address</td>
+                        <td>
+                            <a href="/Customers/Edit/@customer.CustomerId" class="btn  btn-warning me-1">تعديل</a>
+                            <a href="/Customers/Details/@customer.CustomerId" class="btn  btn-info me-1">التفاصيل</a>
+                            <a href="/Customers/Delete/@customer.CustomerId" class="btn  btn-danger">حذف</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                @*
+                 <tr>
+                    <td colspan="8" class="text-center">
+                        إجمالي الزبائن: @Model.Count
+                    </td>
+                </tr>
+                *@
+
+            </tfoot>
+        </table>
+    </div>
+</div>
+@section scripts {
+    <script src="~/JS/Customers.js"></script>
+}

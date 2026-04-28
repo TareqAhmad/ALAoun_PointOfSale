@@ -1,0 +1,64 @@
+@model IEnumerable<ALAoun_Pos.Models.ClsBranches>; 
+
+@{
+    ViewData["Title"] = "الفـــروع";
+}
+<div class="container mt-4">
+
+    <div class="row mb-3">
+        <div class="col-md-4">
+             <h1 class="mb-4 text-center">الفـــروع</h1>
+        </div>
+        <div class="col-md-4">
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="/Branches/Create" class="btn btn-primary">إضافة فرع جديد</a>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>الرمــز</th>
+                    <th>اسم الفرع</th>
+                    <th>الهاتف</th>
+                    <th>الإيميل</th>
+                    <th>العنوان</th>
+                    <th>الإجراءات</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var branch in Model)
+                {
+                    <tr>
+                        <td>@branch.BranchId</td>
+                        <td>@branch.BranchName</td>
+                        <td>@branch.Phone</td>
+                        <td>@branch.Email</td>
+                        <td>@branch.Address</td>
+                        <td>
+                            <a href="/Branches/Edit/@branch.BranchId" class="btn  btn-warning me-1">تعديل</a>
+                            <a href="/Branches/Details/@branch.BranchId" class="btn  btn-info me-1">التفاصيل</a>
+                           @* // <a href="/Branches/Delete/@branch.BranchId" class="btn  btn-danger">حذف</a>  *@ 
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                @*
+                 <tr>
+                    <td colspan="8" class="text-center">
+                        إجمالي الزبائن: @Model.Count
+                    </td>
+                </tr>
+                *@
+
+            </tfoot>
+        </table>
+    </div>
+</div>
+@section scripts {
+    <script src="~/JS/apiService.js"></script>
+    <script src="~/JS/Branches.js"></script>
+}

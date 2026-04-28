@@ -1,0 +1,67 @@
+@model ALAoun_Pos.Models.ClsDiscounts; 
+@{
+    ViewData["Title"] = "تعديل الخصم";
+}
+
+
+<div class="container mt-5">
+    <h3>تعديل الخصم</h3>
+   
+    <form id="createProductForm" class="mt-3 border rounded p-3 "   >
+        <div class="mb-3">
+            <label for="discountName" class="form-label">اسم الخصم</label>
+            <input type="text"
+                   class="form-control fs-4" 
+                   id="discountName" 
+                   name="discountName" 
+                   value="@Model.discountName"
+                   required>   
+        </div>
+        <div class="mb-3">
+            <label for="discountType" class="form-label">نوع الخصم</label>
+            <input type="text" 
+                   class="form-control fs-4" 
+                   id="discountType" 
+                   name="discountType" 
+                   value="@Model.discountType"
+                   required>   
+        </div>
+        <div class="mb-3">
+            <label for="discountRate" class="form-label">نسبة الخصم</label>
+            <input type="number" 
+                   class="form-control fs-4" 
+                   id="discountRate" 
+                   name="discountRate" 
+                   step="0.01" 
+                   value="@Model.discountRate"
+                   required>   
+        </div>
+         <div class="mb-3">
+            <label for="startDate" class="form-label">تاريخ البدء</label>
+            <input type="date" 
+                   class="form-control fs-4"
+                    id="startDate" 
+                    name="startDate" 
+                    value="@Model.startDate"
+                    required>   
+        </div>
+        <div class="mb-3">
+            <label for="endDate" class="form-label">تاريخ الانتهاء</label>
+            <input type="date" 
+                   class="form-control fs-4" 
+                   id="endDate" 
+                   name="endDate" 
+                   value="@Model.endDate"
+                   required>   
+        </div>
+
+        <div class="mb-3">
+            <button type="submit" class="btn btn-success fs-4">حفظ الخصم</button>
+            <a href="@Url.Action("Index", "Discounts")" class="btn btn-secondary fs-4">إلغاء</a>
+        </div>
+    </form>    
+
+</div>
+@section scripts {
+    <script src="~/JS/Discounts.js"></script>
+}

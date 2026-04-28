@@ -1,0 +1,64 @@
+@{
+    ViewData["Title"] = "منتج جديد";
+}
+
+
+<div class="container mt-5">
+    <h3>إضافة منتج جديد</h3>
+   
+    <form id="createProductForm" class="mt-3 border rounded p-3 "   >
+        <div class="mb-3">
+            <label for="Barcode" class="form-label">الباركود</label>
+            <input type="text" class="form-control fs-4" id="Barcode" name="Barcode" required>
+        </div>
+        <div class="mb-3">
+            <label for="ProductName" class="form-label">اسم المنتج</label>
+            <input type="text" class="form-control fs-4" id="ProductName" name="ProductName" required>   
+        </div>
+        <div class="mb-3">
+            <label for="ProductCost" class="form-label">التكلفة</label>
+            <input type="text" class="form-control fs-4" id="ProductCost" name="Cost" required>   
+        </div>
+         <div class="mb-3">
+            <label for="ProductPrice" class="form-label">السعر</label>
+            <input type="text" class="form-control fs-4" id="ProductPrice" name="Price" required>   
+        </div>
+        <div class="mb-3">
+            <label for="stockQuantity" class="form-label">الكمية المتوفرة</label>
+            <input type="text" class="form-control fs-4" id="stockQuantity" name="Quantity" required>   
+        </div>
+        <div class="mb-3">
+            <label for="taxId" class="form-label">الضريبة</label>
+            <select class="form-select fs-4" id="taxId" name="TaxId" required>
+                <option value="">اختر نوع الضريبة</option>
+                @* سيتم ملء هذه القائمة بأنواع الضريبة من قاعدة البيانات *@
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="categoryId" class="form-label">التصنيف</label>
+            <select class="form-select fs-4" id="categoryId" name="CategoryId" required>
+                <option value="">اختر تصنيف المنتج</option>
+                @* سيتم ملء هذه القائمة بالتصنيفات من قاعدة البيانات *@
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="supplierId" class="form-label">المورد</label>
+            <select class="form-select fs-4" id="supplierId" name="SupplierId" required>
+                <option value="">اختر مورد المنتج</option>
+                @* سيتم ملء هذه القائمة بالموردين من قاعدة البيانات *@
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="productImage" class="form-label">صورة المنتج</label>
+            <input type="file" class="form-control fs-4" id="productImage" name="ProductImage">
+        </div>
+        <div class="mb-3">
+            <button type="submit" class="btn btn-success fs-4">حفظ المنتج</button>
+            <a href="@Url.Action("Index", "Products")" class="btn btn-secondary fs-4">إلغاء</a>
+        </div>
+    </form>    
+
+</div>
+@section scripts {
+    <script src="~/JS/products.js"></script>
+}

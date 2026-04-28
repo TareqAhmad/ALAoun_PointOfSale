@@ -1,0 +1,48 @@
+@model ALAoun_Pos.Models.ClsTaxies; 
+@{
+    ViewData["Title"] = "تعديل الضريبة";
+}
+
+
+<div class="container mt-5">
+    <h3>تعديل الضريبة</h3>
+   
+    <form id="createProductForm" class="mt-3 border rounded p-3 "   >
+        <div class="mb-3">
+            <label for="taxName" class="form-label">اسم الضريبة</label>
+            <input type="text" 
+                    class="form-control fs-4" 
+                    id="taxName" 
+                    name="taxName" 
+                    value="@Model.taxName" 
+                    required>   
+        </div>
+        <div class="mb-3">
+            <label for="taxRate" class="form-label">نسبة الضريبة</label>
+            <input type="number" 
+                    class="form-control fs-4" 
+                    id="taxRate" 
+                    name="taxRate" 
+                    step="0.01" 
+                    value="@Model.taxRate" 
+                    required>   
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label">الوصف</label>
+            <input type="text" 
+                    class="form-control fs-4" 
+                    id="description" 
+                    name="description" 
+                    value="@Model.description" 
+                    required>   
+        </div>
+        <div class="mb-3">
+            <button type="submit" class="btn btn-success fs-4">حفظ الضريبة</button>
+            <a href="@Url.Action("Index", "Taxies")" class="btn btn-secondary fs-4">إلغاء</a>
+        </div>
+    </form>    
+
+</div>
+@section scripts {
+    <script src="~/JS/Taxies.js"></script>
+}

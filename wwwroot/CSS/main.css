@@ -1,0 +1,110 @@
+ /* Start global Rules  */
+/* Start Variables  */
+:root {
+    --main-color: #0083b0;
+    --bg-color: #30336b;
+}
+
+/* End Variables  */
+
+.vh-50 {
+    min-height: 50vh;
+}
+
+.vh-40 {
+    min-height: 40vh;
+}
+
+.fs-0 {
+    font-size: 1rem;
+}
+
+.w-15 {
+    width: 15% !important;
+}
+
+.none {
+    display: none !important;
+}
+
+
+* {
+    margin: 0;
+    padding: 0;
+    border: none;
+    outline: none;
+    color: black;
+    list-style-type: none;
+    text-decoration: none !important;
+    text-transform: capitalize;
+    transition: all .4s linear;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
+
+html {
+    font-size: 62.5%;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+}
+
+.btn{
+    font-size: 1.3rem !important;
+}
+body {
+    font-family: "Cairo", sans-serif;
+    font-size: 1.4rem;
+}
+
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: #eb4d4b !important; 
+    height: 4rem;
+    z-index: 1000;
+}
+.footer {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    color: #ffff;
+    background-color: #0984e3;
+    height: 4rem;
+    z-index: 1000;
+}
+
+.bg-custom{
+    background-color:#192a56 !important; 
+}
+.bg-alter 
+{
+    background-color: #c8d6e5 !important;
+}
+
+.custom-select-rtl
+   {
+    direction: rtl !important; 
+    text-align: right !important;
+
+    appearance: none !important;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    /* إضافة سهم مخصص */
+    background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='16' viewBox='0 0 20 20' width='16' xmlns='http://www.w3.org/2000/svg'><path d='M5 7l5 5 5-5z'/></svg>");
+    background-repeat: no-repeat;
+
+    /* مكان السهم (يسار في RTL) */
+    background-position: left 1rem center;
+
+    /* مساحة للسهم */
+    padding-left: 3.5rm;
+
+}
+
+
+/* End global Rules  */
