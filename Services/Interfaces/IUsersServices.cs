@@ -8,7 +8,7 @@ namespace ALAoun_Pos.Services.interfaces
     {
        
 
-          public List<ClsUsers> GetAllUsers(int companyId,int branchId);
+          public List<ClsUsers> GetAllUsers(int companyId,int branchId,int posId);
           
           public ClsUsers GetUserById(ClsUsers user);
 

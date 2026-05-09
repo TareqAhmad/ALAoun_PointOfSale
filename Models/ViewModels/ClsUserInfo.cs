@@ -9,6 +9,7 @@ namespace ALAoun_Pos.Models
         public int RoleId {get; set;}
         public string? UserName {get; set;}
         public string? CompanyName {get; set; }
+        public bool IsActive { get; set; }
         public string? BranchName {get; set; }
         public string? PosName {get; set;}
  }

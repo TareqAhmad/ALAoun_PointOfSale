@@ -16,41 +16,58 @@
             <input type="text" class="form-control fs-4" id="ProductName" name="ProductName" required>   
         </div>
         <div class="mb-3">
-            <label for="ProductCost" class="form-label">التكلفة</label>
-            <input type="text" class="form-control fs-4" id="ProductCost" name="Cost" required>   
+            <label for="cost" class="form-label">التكلفة</label>
+            <input type="text" class="form-control fs-4" id="cost" name="Cost" required>   
         </div>
          <div class="mb-3">
-            <label for="ProductPrice" class="form-label">السعر</label>
-            <input type="text" class="form-control fs-4" id="ProductPrice" name="Price" required>   
+            <label for="price" class="form-label">السعر</label>
+            <input type="text" class="form-control fs-4" id="price" name="Price" required>   
         </div>
         <div class="mb-3">
             <label for="stockQuantity" class="form-label">الكمية المتوفرة</label>
-            <input type="text" class="form-control fs-4" id="stockQuantity" name="Quantity" required>   
+            <input type="text" class="form-control fs-4" id="quantity" name="Quantity" required>   
         </div>
         <div class="mb-3">
-            <label for="taxId" class="form-label">الضريبة</label>
-            <select class="form-select fs-4" id="taxId" name="TaxId" required>
-                <option value="">اختر نوع الضريبة</option>
-                @* سيتم ملء هذه القائمة بأنواع الضريبة من قاعدة البيانات *@
-            </select>
-        </div>
-        <div class="mb-3">
-            <label for="categoryId" class="form-label">التصنيف</label>
-            <select class="form-select fs-4" id="categoryId" name="CategoryId" required>
+            <label for="categorySelect" class="form-label">التصنيف</label>
+            <select class="form-select fs-4" id="categorySelect" name="categorySelect" required>
                 <option value="">اختر تصنيف المنتج</option>
-                @* سيتم ملء هذه القائمة بالتصنيفات من قاعدة البيانات *@
             </select>
         </div>
         <div class="mb-3">
-            <label for="supplierId" class="form-label">المورد</label>
-            <select class="form-select fs-4" id="supplierId" name="SupplierId" required>
+            <label for="taxiesSelect" class="form-label">الضريبة</label>
+            <select class="form-select fs-4" id="taxiesSelect" name="taxiesSelect" required>
+                <option value="">اختر نوع الضريبة</option>
+            </select>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label for="mainUnit" class="form-label">الوحدة الكبرى</label>
+                <select class="form-select fs-4" id="mainUnit" name="MainUnitId" required>
+                    <option value="">اختر الوحدة الكبرى</option>
+                </select>
+            </div>
+
+            <div class="col-md-4">
+                <label for="subUnit" class="form-label">الوحدة الصغرى</label>
+                <select class="form-select fs-4" id="subUnit" name="SubUnitId" required>
+                    <option value="">اختر الوحدة الصغرى</option>
+                </select>
+            </div>
+
+            <div class="col-md-4">
+                <label for="conversionFactor" class="form-label">معامل التحويل</label>
+                <input type="number" class="form-control fs-4" id="conversionFactor" name="ConversionFactor" placeholder="مثلاً: 12" required>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="supplierSelect" class="form-label">المورد</label>
+            <select class="form-select fs-4" id="supplierSelect" name="supplierSelect" required>
                 <option value="">اختر مورد المنتج</option>
-                @* سيتم ملء هذه القائمة بالموردين من قاعدة البيانات *@
             </select>
         </div>
         <div class="mb-3">
-            <label for="productImage" class="form-label">صورة المنتج</label>
-            <input type="file" class="form-control fs-4" id="productImage" name="ProductImage">
+            <label for="ProductReorderLevel" class="form-label">مستوى إعادة الطلب</label>
+            <input type="number" class="form-control fs-4" id="ProductReorderLevel" name="ProductReorderLevel" placeholder="مثلاً: 10" required>
         </div>
         <div class="mb-3">
             <button type="submit" class="btn btn-success fs-4">حفظ المنتج</button>
@@ -60,5 +77,6 @@
 
 </div>
 @section scripts {
+    <script src="~/JS/apiService.js"></script>
     <script src="~/JS/products.js"></script>
 }

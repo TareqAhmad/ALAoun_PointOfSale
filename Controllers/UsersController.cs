@@ -4,6 +4,7 @@ using ALAoun_Pos.Services.interfaces;
 
 namespace ALAoun_Pos.Controllers
 {
+
     public class UsersController : Controller
     {
 
@@ -14,25 +15,16 @@ namespace ALAoun_Pos.Controllers
              _usersServices = usersServices;
         }
 
-        private IActionResult ExitApplication()
-        {
-             return RedirectToAction("index","Home"); 
-        }
+  
 
-
-        
+        [SessionCheckFilter]
         [HttpGet]
         public IActionResult Index()
         {
             int? companyId = HttpContext.Session.GetInt32("CompanyId"); 
             int? branchId = HttpContext.Session.GetInt32("BranchId");             
-
-            if(companyId == null || branchId == null)
-            {
-              return  ExitApplication();  
-            }
             
-            var users = _usersServices.GetAllUsers(companyId.Value,branchId.Value);
+            var users = _usersServices.GetAllUsers(companyId.Value,branchId.Value,0);
 
             return View(users);
         }
@@ -56,14 +48,31 @@ namespace ALAoun_Pos.Controllers
         [HttpGet]
         public List<ClsUsers> GetAllUsers(int companyId,int branchId)
         {
-            List<ClsUsers> users = new List<ClsUsers>(); 
           
-            users = _usersServices.GetAllUsers(companyId,branchId); 
+          
+           var users = _usersServices.GetAllUsers(companyId,branchId,0); 
 
             return users; 
             
         }
-        
+
+
+        [HttpGet]
+        public IActionResult GetIdAndNameUsers(int companyId,int branchId,int posId = 0)
+        {
+         
+           var users = _usersServices.GetAllUsers(companyId,branchId,posId); 
+           
+         
+           var result = users.Select(u=> new {
+                Id = u.UserId,
+                Name = u.UserName
+                
+            }).ToList();
+
+            return Json(result);
+            
+        }
 
        [HttpGet]
        public IActionResult GetUserPrivileges(int userId)
@@ -71,10 +80,6 @@ namespace ALAoun_Pos.Controllers
           int? companyId = HttpContext.Session.GetInt32("CompanyId");
           int? branchId = HttpContext.Session.GetInt32("BranchId");
 
-          if(companyId == null || branchId == null)
-          {
-              return ExitApplication();
-          }
 
            var userPrivileges = _usersServices.GetUserRolePrivilegesById(companyId.Value, branchId.Value, userId);
               

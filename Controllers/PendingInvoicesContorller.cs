@@ -6,6 +6,7 @@ using System.Text.Json;
 
 namespace ALAoun_Pos.Controllers
 {
+    [SessionCheckFilter]
     public class PendingInvoicesController : Controller
     {
         
@@ -17,10 +18,6 @@ namespace ALAoun_Pos.Controllers
         }
        
 
-        private IActionResult ExitApplication()
-        {
-             return RedirectToAction("Home","index"); 
-        }
 
        public IActionResult Index()
         {
@@ -51,13 +48,6 @@ namespace ALAoun_Pos.Controllers
             int? branchId = HttpContext.Session.GetInt32("BranchId") ;
             int? posId = HttpContext.Session.GetInt32("PosId");
 
-
-
-            if (companyId == null || branchId == null)
-            {
-                 ExitApplication(); 
-            }
-
             var pendingInvoices = _pendingInvoicesService.GetAllPendingInvoices(companyId.Value,branchId.Value,posId.Value);
 
             return Json(pendingInvoices);
@@ -70,12 +60,6 @@ namespace ALAoun_Pos.Controllers
              int? companyId = HttpContext.Session.GetInt32("CompanyId") ; 
              int? branchId = HttpContext.Session.GetInt32("BranchId") ;
              int? posId = HttpContext.Session.GetInt32("PosId") ;  
-
-
-            if (companyId == null || branchId == null || posId == null)
-            {
-                 ExitApplication(); 
-            }   
 
             var pendingInvoice = _pendingInvoicesService.GetPendingInvoiceById(companyId.Value,branchId.Value,posId.Value,pendingInvoiceId);
     
@@ -92,12 +76,6 @@ namespace ALAoun_Pos.Controllers
             int? branchId = HttpContext.Session.GetInt32("BranchId") ; 
             int? posId = HttpContext.Session.GetInt32("PosId") ;
             int? userId = HttpContext.Session.GetInt32("UserId") ;
-
-
-            if (companyId == null || branchId == null)
-            {
-                 ExitApplication(); 
-            }
 
 
             var Result = _pendingInvoicesService.AddPendingInvoice(companyId.Value,branchId.Value,posId.Value,userId.Value,pendingInvoiceDto); 

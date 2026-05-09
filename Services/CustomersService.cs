@@ -2,7 +2,8 @@ using Microsoft.Data.SqlClient;
 using System.Data;
 using ALAoun_Pos.Models;
 using ALAoun_Pos.Services.interfaces;
-using ALAoun_Pos.Data; 
+using ALAoun_Pos.Data;
+using ALAoun_POS.Models;
 
 namespace ALAoun_Pos.Services
 {
@@ -88,17 +89,31 @@ namespace ALAoun_Pos.Services
         }
 
 
-       public bool AddCustomer()
+       public bool AddCustomer(CustomerDto customerDto)
+        {
+            string query = @"INSERT INTO Customers (CustomerName,Phone,Email,Address,CompanyId,BranchId)
+                             VALUES (@customerName,@phone,@email,@address,@companyId,@branchId)";
+
+            SqlParameter[] parameters =
+            {
+                new SqlParameter("@customerName",customerDto.customerName),
+                new SqlParameter("@phone",customerDto.phone),
+                new SqlParameter("@email",customerDto.email),
+                new SqlParameter("@address",customerDto.address),
+                new SqlParameter("@companyId",customerDto.companyId),
+                new SqlParameter("@branchId",customerDto.branchId)
+            };
+
+            var rowsAffected = _dbHelper.Execute(query, parameters);
+            return rowsAffected > 0;
+        }
+
+       public bool EditCustomer(CustomerDto customer)
         {
             return false; 
         }
 
-       public bool EditCustomer(ClsCustomers customer)
-        {
-            return false; 
-        }
-
-       public bool DeleteCustomer(ClsCustomers customer)
+       public bool DeleteCustomer(CustomerDto customer)
         {
             return false; 
         }

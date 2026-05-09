@@ -6,7 +6,7 @@ using ALAoun_Pos.Services.interfaces;
 
 namespace ALAoun_Pos.Controllers
 {
-
+    [SessionCheckFilter]
     public class TaxiesController : Controller
     {
 
@@ -23,10 +23,6 @@ namespace ALAoun_Pos.Controllers
             int? companyId = HttpContext.Session.GetInt32("CompanyId");
             int? branchId = HttpContext.Session.GetInt32("BranchId");
            
-            if (companyId == null || branchId == null)
-            {
-                return RedirectToAction("Index", "Home");
-            }
 
             var taxies = _taxiesService.GetAllTaxies(companyId.Value);
             return View(taxies);
@@ -43,10 +39,6 @@ namespace ALAoun_Pos.Controllers
              int? companyId = HttpContext.Session.GetInt32("CompanyId");
             int? branchId = HttpContext.Session.GetInt32("BranchId");
            
-            if (companyId == null || branchId == null)
-            {
-                return RedirectToAction("Index", "Home");
-            }
 
             var tax = _taxiesService.GetTaxById(companyId.Value, id);
             return View(tax);
@@ -59,6 +51,34 @@ namespace ALAoun_Pos.Controllers
         public IActionResult Delete(int id)
         {
             return View();
+        }
+
+        [HttpGet]
+        public IActionResult GetAllTaxies()
+        {
+            int? companyId = HttpContext.Session.GetInt32("CompanyId");
+            int? branchId = HttpContext.Session.GetInt32("BranchId");
+           
+
+            var taxies = _taxiesService.GetAllTaxies(companyId.Value);
+           
+            return View(taxies);
+        }
+
+                [HttpGet]
+        public IActionResult GetIdAndNameTaxies()
+        {
+            int? companyId = HttpContext.Session.GetInt32("CompanyId");
+            int? branchId = HttpContext.Session.GetInt32("BranchId");
+           
+            var taxies = _taxiesService.GetAllTaxies(companyId.Value);
+              
+            var result = taxies.Select(t => new { 
+                
+                Id =  t.taxId,
+                Name = t.taxRate }).ToList(); 
+            
+            return Json(result);
         }
     }
 }

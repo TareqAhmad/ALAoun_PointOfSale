@@ -33,6 +33,7 @@
                 <ul class="collapse list-unstyled" id="productsMenu">
                   <li><a href="@Url.Action("Index","Categories")">التصنيفات </a></li>
                   <li><a href="@Url.Action("Index","Products")"> المنتجات</a></li>
+                  <li><a href="@Url.Action("Index","Units")"> وحدات القياس</a></li>
                   <li><a href="@Url.Action("Index","StockMovements")"> المخزون </a></li>
                 </ul>
 
@@ -54,17 +55,18 @@
               <li><a href="@Url.Action("Index","PaymentMethods")"><i class="bi bi-credit-card fs-2 text-danger"></i> طرق الدفع  </a></li>
               <hr class="text-white">
               <li>
-                    <a data-bs-toggle="collapse" href="#branchesMenu" class="sidebar-link">
-                       <i class="bi bi-geo-alt fs-2 text-danger"></i> إدارة الفروع
+                    <a data-bs-toggle="collapse" href="#companiesMenu" class="sidebar-link">
+                       <i class="bi bi-building fs-2 text-danger"></i> إدارة الشركة
                    </a>
-                   <ul class="collapse list-unstyled ms-4" id="branchesMenu">
+                   <ul class="collapse list-unstyled ms-4" id="companiesMenu">
+                    <li><a href="@Url.Action("Index","Companies")">الشركة</a></li>
                      <li><a href="@Url.Action("Index","Branches")">الفروع</a></li>
                      <li><a href="@Url.Action("Index","PosPoints")">نقاط البيع (الكاشير)</a></li>
                      <li><a href="@Url.Action("Index","Users")">المستخدمون والصلاحيات</a></li>
                    </ul>
                 </li>
-                <li><a href="#" class="sidebar-link"><i class="bi bi-gear me-2 fs-2 text-danger"></i> الاعدادات </a></li>
-                <li><a href="/Home/index" class="sidebar-link"><i class="bi bi-box-arrow-right me-2 fs-2 text-danger"></i> الخروج</a></li>
+                <li><a href="@Url.Action("Index","SettingsApp")" class="sidebar-link"><i class="bi bi-gear me-2 fs-2 text-danger"></i> الاعدادات </a></li>
+                <li><a href="@Url.Action("Index","Home")" class="sidebar-link"><i class="bi bi-box-arrow-right me-2 fs-2 text-danger"></i> الخروج</a></li>
           </ul>
         </nav>
         <main class="main-dashboard flex-grow-1 bg-dark text-light p-3 ">

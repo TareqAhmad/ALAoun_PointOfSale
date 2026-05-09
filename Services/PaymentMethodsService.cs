@@ -18,11 +18,11 @@ namespace ALAoun_Pos.Services
         public List<ClsPaymentMethods> GetAllPaymentMethods(int companyId, int branchId)
         {
             List<ClsPaymentMethods> paymentMethods = new List<ClsPaymentMethods>(); 
-            string query = @"SELECT * 
+            string query = @"SELECT paymentId,paymentType,description
                              FROM PaymentMethods 
                              WHERE CompanyId = @CompanyId 
                              AND BranchId = @BranchId
-                             AND ISactive = 1";
+                             AND IsActive = 1";
 
             SqlParameter[] parameters =
             {
@@ -35,9 +35,9 @@ namespace ALAoun_Pos.Services
             {
                 ClsPaymentMethods paymentMethod = new ClsPaymentMethods
                 {
-                    PaymentId = Convert.ToInt32(row[1]),
-                    PaymentType = row[2].ToString(),
-                    Description = row[3].ToString(),
+                    PaymentId = Convert.ToInt32(row[0]),
+                    PaymentType = row[1].ToString(),
+                    Description = row[2].ToString(),
                 };
                 paymentMethods.Add(paymentMethod);
             }

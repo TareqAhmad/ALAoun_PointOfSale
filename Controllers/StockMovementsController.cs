@@ -4,6 +4,7 @@ using ALAoun_Pos.Services.interfaces;
 
 namespace ALAoun_Pos.Controllers
 {
+      [SessionCheckFilter]
     public class StockMovementsController : Controller
     {
         private readonly IStockMovementsService _stockMovementsService; 
@@ -20,11 +21,6 @@ namespace ALAoun_Pos.Controllers
             int? branchId = HttpContext.Session.GetInt32("BranchId");
 
 
-            if (companyId == null || branchId == null)
-            {
-                return RedirectToAction("Home","index"); 
-            }
-
              var stockMovements = _stockMovementsService.GetAllStockMovements(companyId.Value,branchId.Value);
 
             return View(stockMovements);
@@ -39,12 +35,6 @@ namespace ALAoun_Pos.Controllers
         {
             int? companyId = HttpContext.Session.GetInt32("CompanyId"); 
             int? branchId = HttpContext.Session.GetInt32("BranchId");
-
-
-            if (companyId == null || branchId == null)
-            {
-                return RedirectToAction("Home","index"); 
-            }
 
              var stockMovements = _stockMovementsService.GetStockMovementsById(companyId.Value,branchId.Value,id);
 

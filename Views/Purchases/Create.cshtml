@@ -1,0 +1,109 @@
+@{
+    ViewData["Title"] = "فاتورة مشتريات جديدة";
+}
+
+<div class="container-fluid mt-5 px-4">
+    <h3 class="mb-4"><i class="fa fa-shopping-cart text-primary"></i> إنشاء فاتورة مشتريات</h3>
+
+    <form id="createPurchaseForm" class="mt-3 border rounded p-4 bg-white shadow-sm">
+        <!-- قسم بيانات الفاتورة الأساسية -->
+        <div class="row bg-light p-3 rounded mb-4 border">
+            <div class="col-md-3 mb-3">
+                <label for="supplierSelect" class="form-label fw-bold">المورد</label>
+                <select class="form-select fs-5" id="supplierSelect" name="SupplierId" required>
+                    <option value="">اختر المورد...</option>
+                </select>
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="paymentMethod" class="form-label fw-bold">طريقة الدفع</label>
+                <select class="form-select fs-5" id="paymentMethod" name="PaymentId" required>
+                    <option value="1">نقدي</option>
+                    <option value="2">آجل</option>
+                </select>
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="PurchaseDate" class="form-label fw-bold">تاريخ الفاتورة</label>
+                <input type="datetime-local" class="form-control fs-5" id="PurchaseDate" name="PurchaseDate" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")">
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="BranchName" class="form-label fw-bold">الفرع</label>
+                <input type="text" class="form-control fs-5 bg-light" id="BranchName" value="@Context.Session.GetString("BranchName")" readonly>
+            </div>
+        </div>
+
+        <!-- قسم إضافة الأصناف -->
+        <div class="row align-items-end mb-3 g-2">
+            <div class="col-md-5">
+                <label class="form-label fw-bold text-success">إضافة صنف للفاتورة (باركود أو اسم)</label>
+                <input type="text" id="productSearch" class="form-control fs-4 border-success" placeholder="امسح الباركود أو ابحث عن المنتج...">
+            </div>
+            <div class="col-md-2">
+                <button type="button" id="btnOpenProducts" class="btn btn-outline-success w-100 fs-5">
+                    <i class="fa fa-search"></i> بحث متقدم
+                </button>
+            </div>
+        </div>
+
+        <!-- جدول الأصناف الديناميكي -->
+        <div class="table-responsive mt-4">
+            <table class="table table-bordered align-middle" id="purchaseItemsTable">
+                <thead class="table-dark">
+                    <tr class="text-center">
+                        <th style="width: 5%;">X</th>
+                        <th style="width: 30%;">اسم المنتج</th>
+                        <th style="width: 10%;">الكمية</th>
+                        <th style="width: 10%;">سعر الشراء</th>
+                        <th style="width: 10%;">الخصم</th>
+                        <th style="width: 10%;">الضريبة</th>
+                        <th style="width: 15%;">الإجمالي</th>
+                    </tr>
+                </thead>
+                <tbody id="purchaseItemsBody">
+                    <!-- سيتم إضافة الصفوف هنا برمجياً -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ملخص الفاتورة والإجمالي -->
+        <div class="row mt-4 justify-content-end">
+            <div class="col-md-4">
+                <div class="card border-primary">
+                    <div class="card-body fs-5">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>الإجمالي الرئيسي:</span>
+                            <span id="txtPurchaseTotal">0.00</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2 text-danger">
+                            <span>إجمالي الخصم:</span>
+                            <span id="txtDiscountAmount">0.00</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>إجمالي الضريبة:</span>
+                            <span id="txtTaxAmount">0.00</span>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between fw-bold fs-3 text-primary">
+                            <span>الصافي النهائي:</span>
+                            <span id="txtNetAmount">0.00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- أزرار التحكم -->
+        <div class="mt-4 border-top pt-3">
+            <button type="button" id="btnSavePurchase" class="btn btn-success btn-lg fs-4 px-5">
+                <i class="fa fa-save"></i> حفظ الفاتورة (F10)
+            </button>
+            <button type="button" class="btn btn-secondary btn-lg fs-4 px-4 ms-2" onclick="location.reload()">
+                إلغاء / جديد
+            </button>
+        </div>
+    </form>
+</div>
+
+@section scripts {
+    <script src="~/JS/apiService.js"></script>
+    <script src="~/JS/Purchases.js"></script>
+}

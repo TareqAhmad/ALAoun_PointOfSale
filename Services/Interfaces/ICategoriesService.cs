@@ -9,7 +9,7 @@ namespace ALAoun_Pos.Services.interfaces
 
             public ClsCategories GetCategoriesById(int companyId ,int branchId,int categoryId);
 
-            public bool AddCategory(); 
+            public bool AddCategory(CategoryDto categoryDto); 
 
             public bool EditCategory(ClsCategories Category); 
 

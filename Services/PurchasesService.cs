@@ -7,11 +7,11 @@ using System.Data;
 namespace ALAoun_Pos.Services
 {
     
-    public class PurchaseInvoicesService : IPurchaseInvoicesService
+    public class PurchasesService : IPurchasesService
     {
         private readonly DbHelper _dbHelper; 
 
-        public PurchaseInvoicesService(DbHelper dbHelper)
+        public PurchasesService(DbHelper dbHelper)
         {
              _dbHelper = dbHelper; 
         }
@@ -64,17 +64,17 @@ namespace ALAoun_Pos.Services
             return new PurchaseInvoicesVM(); 
         }
 
-        public bool AddPurchaseInvoice(int companyId, int branchId,ClsPurchaseInvoices purchaseInvoices)
+        public bool AddPurchaseInvoice(PurchaseInvoiceDto purchaseInvoicesDto)
         {
             return false; 
         }
 
-        public bool EditPurchaseInvoice(int companyId, int branchId,ClsPurchaseInvoices purchaseInvoices)
+        public bool EditPurchaseInvoice(int companyId, int branchId,ClsPurchases purchaseInvoices)
         {
             return false; 
         }
 
-        public bool DeletePurchaseInvoices(int companyId, int branchId,ClsPurchaseInvoices purchaseInvoices)
+        public bool DeletePurchaseInvoices(int companyId, int branchId,ClsPurchases purchaseInvoices)
         {
             return false; 
         }

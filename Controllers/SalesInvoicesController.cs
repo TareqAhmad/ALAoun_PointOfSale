@@ -6,6 +6,7 @@ using ALAoun_Pos.Services.interfaces;
 namespace ALAoun_Pos.Controllers
 {
     
+    [SessionCheckFilter]
     public class SalesInvoicesController : Controller
     {
         
@@ -25,10 +26,6 @@ namespace ALAoun_Pos.Controllers
             int? branchId = HttpContext.Session.GetInt32("BranchId");
             int? posId = HttpContext.Session.GetInt32("PosId");
 
-             if(companyId == null || branchId == null || posId == null)
-            {
-                  return RedirectToAction("Index","Home"); 
-            }
          
              var salesInvoices = _salesInvoicesService.GetAllSalesInvoices(companyId.Value,branchId.Value,posId.Value);  
 
@@ -45,11 +42,6 @@ namespace ALAoun_Pos.Controllers
             int? posId = HttpContext.Session.GetInt32("PosId"); 
             int? userId = HttpContext.Session.GetInt32("UserId");
 
-            if(companyId == null || branchId == null || posId == null || userId == null)
-            {
-                  return RedirectToAction("Index","Home"); 
-            }
-
             var Result =  _salesInvoicesService.AddSalesInvoice(companyId.Value,branchId.Value,posId.Value,userId.Value,salesInvoiceDto); 
 
              return Json(Result);
@@ -61,11 +53,6 @@ namespace ALAoun_Pos.Controllers
             int? companyId = HttpContext.Session.GetInt32("CompanyId"); 
             int? branchId = HttpContext.Session.GetInt32("BranchId");
             int? posId = HttpContext.Session.GetInt32("PosId"); 
-
-            if(companyId == null || branchId == null || posId == null)
-            {
-                  return RedirectToAction("Index","Home"); 
-            }
 
             return View();
         }
@@ -87,11 +74,6 @@ namespace ALAoun_Pos.Controllers
             int? companyId = HttpContext.Session.GetInt32("CompanyId"); 
             int? branchId = HttpContext.Session.GetInt32("BranchId");
             int? posId = HttpContext.Session.GetInt32("PosId");
-
-             if(companyId == null || branchId == null || posId == null)
-            {
-                  return RedirectToAction("Index","Home"); 
-            }
          
              var salesInvoices = _salesInvoicesService.GetAllSalesInvoices(companyId.Value,branchId.Value,posId.Value);  
 
@@ -108,7 +90,7 @@ namespace ALAoun_Pos.Controllers
             int? branchId = HttpContext.Session.GetInt32("BranchId");
             int? posId = HttpContext.Session.GetInt32("PosId");
 
-             if(companyId == null || branchId == null || posId == null)
+             if(posId == null)
             {
                   return RedirectToAction("Index","Home"); 
             }

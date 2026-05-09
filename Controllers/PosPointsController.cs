@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ALAoun_Pos.Controllers
 {
+ 
     public class PosPointsController : Controller
     {
         
@@ -15,21 +16,12 @@ namespace ALAoun_Pos.Controllers
           
         }
 
-         private IActionResult ExitApplication()
-        {
-             return RedirectToAction("index","Home"); 
-        }
-
         [HttpGet]
+         [SessionCheckFilter]
         public IActionResult index()
         {
             int? companyId = HttpContext.Session.GetInt32("CompanyId"); 
             int? branchId = HttpContext.Session.GetInt32("BranchId");             
-
-            if(companyId == null || branchId == null)
-            {
-              return  ExitApplication();  
-            }
 
             var posPoints =  _posPointsService.GetAllPosPoints(companyId.Value,branchId.Value); 
 
@@ -58,15 +50,10 @@ namespace ALAoun_Pos.Controllers
         }
 
 
+        [SessionCheckFilter]
         [HttpGet]
         public List<ClsPosPoints> GetAllPosPoints(int companyId, int branchId)
         { 
-
-
-            if(companyId == null || branchId == null)
-            {
-                 ExitApplication();
-            }
 
             var posPoints =  _posPointsService.GetAllPosPoints(companyId,branchId); 
 
@@ -74,6 +61,20 @@ namespace ALAoun_Pos.Controllers
             return posPoints; 
         }
 
+        [HttpGet]
+        public IActionResult GetIdAndNamePosPoints(int companyId, int branchId)
+        { 
+
+            var posPoints =  _posPointsService.GetAllPosPoints(companyId,branchId); 
+
+             var result = posPoints.Select(p => new
+             {
+                    id = p.PosId,
+                    name = p.PosName
+             }).ToList();
+
+            return Json(result); 
+        }
 
 
     }

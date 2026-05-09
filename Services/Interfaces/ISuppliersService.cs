@@ -13,7 +13,7 @@ namespace ALAoun_Pos.Services.interfaces
        public ClsSuppliers GetSupplierById(int companyId,int branchId,int customerId);
 
 
-       public bool AddSupplier(); 
+       public bool AddSupplier(SupplierDto supplierDto); 
 
        public bool EditSupplier(ClsSuppliers supplier); 
 

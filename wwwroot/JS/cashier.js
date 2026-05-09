@@ -14,8 +14,22 @@
 $(document).ready(function(){
    
     if($("#Select-customer-cashier").length === 0 ) return; 
+   
+
+    console.log("cashier Page");
+    console.log(localStorage.getItem("loginType")); 
+    console.log(localStorage.getItem("loginMessage"));
+    
+    let msg = localStorage.getItem("loginMessage");
+   
+    if (msg) {
+        showToast(msg); 
+        localStorage.removeItem("loginMessage");
+    }
+
     initializePage(); 
-    setupEventListeners()       
+    setupEventListeners() 
+
 }); 
 
 
@@ -31,23 +45,32 @@ function initializePage() {
 
 // --- 3. Event Listeners (UI Interactions) ---
 function setupEventListeners(){
-    // إدارة حالة أزرار التصنيفات
+
     $("#categoryTabs").on("click", "button", function() {
         $("#categoryTabs button").removeClass("active");
         $(this).addClass("active");
     });
 
-    // مراقبة اختيار الزبون
     $("#Select-customer-cashier").on("change", function() {
         localStorage.setItem("customerId", $(this).val());
     });
 
-    // أزرار التحكم بالسلة
-    $("#CancelCart, #btn-Exit").on("click", clearCart);
-    $("#addPendingInvoice").on("click", AddPendingInvoice);
+    // Buttons and Modals
+    
+    $("#btnPendingInvoice").on("click", AddPendingInvoice);
+    $("#btnEditQty").on("click", setEditQtyModal);
+    $("#btnDiscount").on("click", setDiscountModal);
 
-    // المودالات (Modals)
+    
     $("#holdModal").on("show.bs.modal", CreateBoxesForHold);
+    $("#SalesInvoicesModal").on("show.bs.modal",GetAllSalesInvoices)
+   
+    $("#CancelCart, #btn-Exit").on("click", clearCart);
+
+
+    $("#btnEndShift").on("click", function () {EndShift(); });
+    $("#btnLeave").on("click", function () { EndLeave(); });
+
 
     $("#payInvoice").on("click", function() {
         let finalNet = parseFloat($("#netAmount").text()) || 0; 
@@ -57,10 +80,8 @@ function setupEventListeners(){
         openPayModal(finalNet, totalBefore, totalDiscount, totalTax); 
     });
 
-    // البحث عن الفواتير
-    $("#GetSalesInvoices").on("click", GetAllSalesInvoices);
+   
 
-    // الباركود
     $("#barcode").on("keypress", function(e) {
         if (e.which === 13) {
             let code = $(this).val().trim();
@@ -70,7 +91,6 @@ function setupEventListeners(){
        }
     });
 
-    // مراقب المدخلات لحساب المتبقي في مودال الدفع
     $(document).on('input', '#receivedAmount', function() {
         let required = parseFloat($("#payFinalAmount").text()) || 0;
         let received = parseFloat($(this).val()) || 0;
@@ -78,12 +98,11 @@ function setupEventListeners(){
         $("#changeAmount").text(change > 0 ? change.toFixed(3) : "0.000");
     });
 
-    // تحديد صف في الجدول لتعديل الكمية أو الخصم
     $(document).on('click', '#cartTableBody tr', function() {
         $('#cartTableBody tr').removeClass('table-warning');
         $(this).addClass('table-warning');
             selectedRowProductId = $(this).data('id');
-        });
+    });
 }
 
 // --- 4. Cart & Calculations Logic ---
@@ -194,16 +213,17 @@ function loadAllCustomers(selectCustomerId = 1) {
     
         let select = $("#Select-customer-cashier");
 
-        apiGetAllCustomers(
+        apiGetIdAndNameCustomers(
         function(data) {
             select.empty();
+         
             data.forEach(customer=>{
-                select.append(`<option value="${customer.customerId}">${customer.customerName}</option>`);
+                select.append(`<option value="${customer.id}">${customer.name}</option>`);
                 });
                 select.val(selectCustomerId);
         }
         ,function(error) {
-                alert("فشل في تحميل قائمة الزبائن من الخادم"  + error);
+                showToast("فشل في تحميل قائمة الزبائن من الخادم","error");
         }
     )
 }
@@ -212,7 +232,7 @@ function loadAllCategories() {
 
     let container = $("#categoryTabs");
 
-    apiGetAllCategories(
+    apiGetIdAndNameCategories(
         function(data) {
             container.empty();
             
@@ -227,7 +247,7 @@ function loadAllCategories() {
                 container.append(`
                                     <button class="btn btn-light border rounded" 
                                             style="width:8rem; height:7rem;" 
-                                            onclick="filterCategory(${category.categoryId})"> ${category.categoryName}
+                                            onclick="filterCategory(${category.id})"> ${category.name}
                                     </button>`
                                 );
 
@@ -235,7 +255,7 @@ function loadAllCategories() {
             });
         },
         function(error){
-            alert("فشل في تحميل قائمة الاصناف من الخادم"  + error)
+            showToast("فشل في تحميل قائمة الاصناف من الخادم","error")
         }
     )
     
@@ -243,14 +263,14 @@ function loadAllCategories() {
 
 function loadAllProducts() {
     
-    apiGetAllProducts(
+    apiGetIdAndNameProducts(
         function(data) {
         allProducts = data; 
-        displayProducts();
+             displayProducts();
         },
         function(error)
         {
-            alert("فشل في تحميل قائمة المواد من الخادم" + error )
+            showToast("فشل في تحميل قائمة المواد من الخادم","error")
         }
     )
 
@@ -261,10 +281,9 @@ function GetAllSalesInvoices() {
     apiGetAllSalesInvoices(
     function(data){
             renderSalesGrid(data);
-            $("#SalesInvoicesModal").modal("show")
     },
     function(error) {
-        alert("فشل في تحميل قائمة فواتير المبيعات من الخادم" + error)
+        showToast("فشل في تحميل قائمة فواتير المبيعات من الخادم","error")
     }
     )
 
@@ -272,7 +291,7 @@ function GetAllSalesInvoices() {
 
 function SaveInvoice() {
     if (cart.length === 0) {
-        alert("لا يمكن حفظ فاتورة فارغة");
+        showToast("لا يمكن حفظ فاتورة فارغة","info");
         return;
     }
 
@@ -290,12 +309,12 @@ function SaveInvoice() {
         contentType: "application/json",
         data: JSON.stringify(invoiceData),
         success: function(response) {
-            alert("تم حفظ الفاتورة وإصدار الرقم: " + response.invoiceId);
+            showToast("تم حفظ الفاتورة وإصدار الرقم: " + response.invoiceId);
             clearCart(); // تصفير السلة بعد النجاح
             if (response.invoiceId) printInvoice(response.invoiceId);
         },
         error: function() {
-            alert("فشل في الاتصال بالسيرفر لحفظ الفاتورة");
+            showToast("فشل في الاتصال بالسيرفر لحفظ الفاتورة","error");
         }
     });
 }
@@ -303,7 +322,7 @@ function SaveInvoice() {
 function AddPendingInvoice() {
     
     if (cart.length === 0) {
-        alert("السلة فارغة، لا يمكن تعليق طلب فارغ");
+        showToast("السلة فارغة، لا يمكن تعليق طلب فارغ","info");
         return;
     }
 
@@ -323,21 +342,21 @@ function AddPendingInvoice() {
                 cart = []; 
                 localStorage.removeItem("cart"); 
                 localStorage.removeItem("customerId"); 
-                alert("تم حفظ الطلب في المعلقات بنجاح");
+                showToast("تم حفظ الطلب في المعلقات بنجاح","error");
                 location.reload();
             } else {
-                alert("فشل السيرفر في معالجة طلب التعليق");
+                showToast("فشل السيرفر في معالجة طلب التعليق","error");
             }
         },
         function(error){
-                alert( " خطأ في الاتصال بالسيرفر أثناء تعليق السلة" + error);
+                showToast( " خطأ في الاتصال بالسيرفر أثناء تعليق السلة","error");
         }
 
     )
 
 }
 
-
+``
 function saveQuickProduct(productData) {
     return $.ajax({
         url: "/Products/Create",
@@ -360,16 +379,17 @@ function renderProductCards(productsArray) {
 
     productsArray.forEach(p => {
         container.append(`
-            <div class="btn btn-light border rounded d-flex flex-column p-1" style="width:10rem; height:8rem;" onclick="addToCart(${p.productId})">
+            <div class="btn btn-light border rounded d-flex flex-column p-1" style="width:10rem; height:8rem;" onclick="addToCart(${p.id})">
                 <div class="flex-grow-1 d-flex justify-content-center align-items-center">
-                    <img src="/Images/${p.iconId}.png" onerror="this.src='/Images/default.png'" style="max-height:60px; max-width:100%;">
+                    <img src="/Images/${p.icon}.png" onerror="this.src='/Images/default.png'" style="max-height:60px; max-width:100%;">
                 </div>
-                <div class="text-center fw-bold text-wrap bg-alter">${p.productName}</div>
+                <div class="text-center fw-bold text-wrap bg-alter">${p.name}</div>
             </div>`);
     });
 }
 
 function displayProducts() { renderProductCards(allProducts); }
+
 
 function filterCategory(categoryId) {
     let filtered = allProducts.filter(p => p.categoryId === categoryId);
@@ -387,6 +407,7 @@ function openPayModal(net, before, discount, tax) {
 }
 
 function renderSalesGrid(data) {
+    
     const tbody = $("#sales-grid-content");
     tbody.empty(); 
 
@@ -442,7 +463,6 @@ function printInvoice(id) {
     window.open('/SalesInvoices/Print/' + id, '_blank');
 }
 
-
 function viewInvoiceDetails(id) {
     // يمكنك هنا استدعاء Ajax لجلب الأصناف الخاصة بهذه الفاتورة وفتح مودال آخر
     console.log("عرض تفاصيل الفاتورة رقم: " + id);
@@ -453,7 +473,7 @@ function CreateBoxesForHold() {
     var container = $("#hold-content"); 
     container.html('<div class="text-center w-100"><div class="spinner-border text-primary"></div><p>جاري التحميل...</p></div>');
         
-        apiGetAllPendingInvoices(
+    apiGetAllPendingInvoices(
         function(data) {
             container.empty(); 
             
@@ -481,21 +501,141 @@ function CreateBoxesForHold() {
                             <small class="text-primary fw-bold">${parseFloat(pi.netInvoice || 0).toFixed(3)}</small>
                         </div>
 
-                        <div class="mt-2 small text-center">
-                            ${statusBadge}
-                        </div>
-                    </div> 
-                `);    
-            });
+                         <div class="mt-2 small text-center">
+                        ${statusBadge}
+                    </div>
+                </div> 
+                     `);    
+             });
         },
         function(error) {
-            container.html('<div class="alert alert-danger w-100">فشل في تحميل البيانات، تأكد من الاتصال بالسيرفر</div>');
+        container.html('<div class="alert alert-danger w-100">فشل في تحميل البيانات، تأكد من الاتصال بالسيرفر</div>');
 
-        }
+       }
+    )
+    
+
+}
+
+function EndShift() {
+    if (confirm("هل أنت متأكد من إنهاء الوردية (الشفت)؟ سيتم طباعة تقرير الإغلاق.")) {
+
+           transLogin = {
+                userId:  window.PosSession.userId,
+                userName: window.PosSession.userName,
+                logTypeId : 2,
+                notes:"تسجيل حركة انهاء الدوام",
+           }
+   
+         apiSetAuditLogin(
+            transLogin,
+            function(response){
+                if(response.success)
+                {
+                  localStorage.setItem("loginType",response.loginType); 
+                  localStorage.setItem("loginMessage",response.message); 
+                  window.location.href = "/Home/Index";
+                }
+            },
+            function(error){
+                showToast("حدث خطا اثناء تسجيل حركة المغادرة","error");
+            }
         )
+       
+    }
+}
+
+function EndLeave() {
+   
+    transLogin = {
+            userId:  window.PosSession.userId,
+            userName: window.PosSession.userName,
+            logTypeId : 3,
+            notes:"تسجيل حركة مفادرة",
+    }
+   
+    apiSetAuditLogin(
+            transLogin,
+            function(response){
+                if(response.success)
+                {
+                  localStorage.setItem("loginType",response.loginType); 
+                  localStorage.setItem("loginMessage",response.message); 
+                  window.location.href = "/Home/Index";
+                }
+            },
+            function(error){
+                showToast("حدث خطا اثناء تسجيل حركة المغادرة","error");
+            }
+        )
+
+      
+}
+
+/**
+ *  ---------------------------------
+ *   Modal Logic & Other UI Interactions
+ *  ----------------------------------
+ */
+
+function setHoldModal() {
 
 
 }
+
+
+function setEditQtyModal() {
+    
+     if(cart.length === 0 )
+    { 
+        showToast("السلة فارغة","error");
+        return false; 
+    }
+    if (selectedRowProductId === null) {
+        showToast("يرجى اختيار مادة من الجدول أولاً","info");
+        return false; 
+    }
+
+
+    let item = cart.find(x => x.productId == selectedRowProductId);
+    if (item) {
+        $("#editQtyProductName").text(item.productName);
+        $("#newQtyInput").val(item.quantity);
+    }
+
+    $("#editQtyModal").modal('show');
+
+}
+
+function setDiscountModal() {
+       
+    if (cart.length === 0) {
+            showToast("السلة فارغة!","error");
+            return false;
+    }
+
+    // تفعيل/تعطيل خيار المادة بناءً على الاختيار في الجدول الرئيسي
+    if (selectedRowProductId) {
+        $("#scopeItem").prop("disabled", false);
+        $("#lblScopeItem").removeClass("text-muted");
+        $("#scopeItem").prop("checked", true); // اجعله الاختيار الافتراضي إذا كان هناك مادة مختارة
+    } else {
+        $("#scopeItem").prop("disabled", true);
+        $("#lblScopeItem").addClass("text-muted");
+        $("#scopeInvoice").prop("checked", true);
+    }
+
+    refreshDiscountModalTable();
+    
+    $("#discountModal").modal('show');
+
+
+
+}
+
+
+
+
 
  //-------------------------------------------------------
 
@@ -519,26 +659,7 @@ $(document).on('click', '#cartTableBody tr', function() {
 });
 
 
-$('#editQtyModal').on("show.bs.modal", function () {
-    
-    if(cart.length === 0 )
-    { 
-        alert("السلة فارغة");
-        return false; 
-    }
-    if (selectedRowProductId === null) {
-        alert("يرجى اختيار مادة من الجدول أولاً");
-        return false; 
-    }
 
-
-    let item = cart.find(x => x.productId == selectedRowProductId);
-    if (item) {
-        $("#editQtyProductName").text(item.productName);
-        $("#newQtyInput").val(item.quantity);
-    }
-    
-});
 
 
 function numpadInput(val) {
@@ -560,7 +681,7 @@ function updateCartQuantity() {
     
     let newQty = parseInt($("#newQtyInput").val());
     if (isNaN(newQty) || newQty < 1) {
-        alert("الكمية يجب أن تكون 1 على الأقل");
+        showToast("الكمية يجب أن تكون 1 على الأقل","info");
         return;
     }
 
@@ -574,7 +695,6 @@ function updateCartQuantity() {
 }
 
 // Btn Discount 
-
 
 function refreshDiscountModalTable() {
       
@@ -614,28 +734,6 @@ function refreshDiscountModalTable() {
      amountDisplay.text(totalTargetAmount.toFixed(3));
 }
 
-$("#discountModal").on("show.bs.modal",function(e) {
-    
-    if (cart.length === 0) {
-        alert("السلة فارغة!");
-        return;
-    }
-
-    // تفعيل/تعطيل خيار المادة بناءً على الاختيار في الجدول الرئيسي
-    if (selectedRowProductId) {
-        $("#scopeItem").prop("disabled", false);
-        $("#lblScopeItem").removeClass("text-muted");
-        $("#scopeItem").prop("checked", true); // اجعله الاختيار الافتراضي إذا كان هناك مادة مختارة
-    } else {
-        $("#scopeItem").prop("disabled", true);
-        $("#lblScopeItem").addClass("text-muted");
-        $("#scopeInvoice").prop("checked", true);
-    }
-
-    refreshDiscountModalTable();
-
-
-}); 
 
 
 //Barcode Scanner
@@ -696,7 +794,7 @@ function saveQuickProduct() {
             };
 
             if (!productData.productName || !productData.productPrice) {
-                alert("يرجى إكمال البيانات");
+                showToast("يرجى إكمال البيانات","info");
                 return;
             }
 
@@ -716,10 +814,14 @@ function saveQuickProduct() {
                     $("#barcode").val("").focus();
                 },
                 error: function() {
-                    alert("فشل حفظ المنتج الجديد");
+                    showToast("فشل حفظ المنتج الجديد","error");
                 }
             });
 }
+
+
+
+
 
 function playSuccessSound() {
         let audio = new Audio('/sounds/beep.mp3');

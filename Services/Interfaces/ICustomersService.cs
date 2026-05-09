@@ -1,4 +1,5 @@
 using ALAoun_Pos.Models;
+using ALAoun_POS.Models;
 
 namespace ALAoun_Pos.Services.interfaces
 {
@@ -12,11 +13,11 @@ namespace ALAoun_Pos.Services.interfaces
        public ClsCustomers GetCustomerById(int companyId,int branchId,int customerId);
 
 
-       public bool AddCustomer(); 
+       public bool AddCustomer(CustomerDto customerDto); 
 
-       public bool EditCustomer(ClsCustomers customer); 
-
-       public bool DeleteCustomer(ClsCustomers customer); 
+       public bool EditCustomer(CustomerDto customer); 
+    
+       public bool DeleteCustomer(CustomerDto customer); 
 
 
 

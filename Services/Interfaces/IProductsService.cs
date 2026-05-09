@@ -8,9 +8,11 @@ namespace ALAoun_Pos.Services.interfaces
 
         public List<ClsProducts> GetAllProducts(int companyId, int branchId);
 
+        public List<ProductForOperationsViewModel> GetInfoProductsForOperation(int companyId, int branchId);
+
         public ClsProducts GetProductById(int companyId, int branchId, int id);
 
-        public bool AddProduct(ClsProducts product);
+        public bool AddProduct(ProductDto product);
 
         public bool EditProduct(ClsProducts product);
 

@@ -1,0 +1,54 @@
+@model IEnumerable<ALAoun_Pos.Models.ClsSettingsApp>
+
+@{
+    ViewData["Title"] = "إعدادات التطبيق";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-4">إعدادات التطبيق</h1>
+        <a id="btnAddSetting" asp-controller="SettingsApp" asp-action="Create" class="btn btn-primary mb-3 fs-5">إضافة إعداد جديد</a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle p-3">
+            <thead class="table-dark fs-5">
+                <tr>
+                    <th>معرف الإعداد</th>
+                    <th>مفتاح الإعداد</th>
+                    <th>قيمة الإعداد</th>
+                    <th>نوع البيانات</th>
+                    <th>قابلة للتعديل</th>
+                    <th>الوصف</th>
+                    <th>الإجراءات</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null)
+                {
+                    foreach (var setting in Model)
+                    {
+                        <tr>
+                            @* تأكد من حالة الأحرف (S كبيرة أو صغيرة) بناءً على الكلاس الخاص بك *@
+                            <td>@setting.settingId</td>
+                            <td>@setting.settingKey</td>
+                            <td>@setting.settingValue</td>
+                            <td>@setting.settingType</td>
+                            <td>@(setting.IsEditable ? "نعم" : "لا")</td>
+                            <td>@setting.Description</td>
+                            <td>
+                                <a href="/SettingsApp/Edit/@setting.settingId" class="btn btn-sm btn-warning me-1 fs-5">تعديل</a>
+                                <a href="/SettingsApp/Details/@setting.settingId" class="btn btn-sm btn-info me-1 fs-5">التفاصيل</a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section scripts {
+    <script src="~/JS/apiService.js"></script>
+    <script src="~/JS/Settings.js"></script>
+}

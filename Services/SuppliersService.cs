@@ -10,7 +10,7 @@ namespace ALAoun_Pos.Services
     public class SuppliersService : ISuppliersService
     {
         
-           private readonly DbHelper _dbHelper; 
+         private readonly DbHelper _dbHelper; 
 
            public SuppliersService(DbHelper dbHelper)
         {
@@ -89,9 +89,26 @@ namespace ALAoun_Pos.Services
         }
 
 
-       public bool AddSupplier()
+       public bool AddSupplier(SupplierDto supplierDto)
         {
-            return false; 
+
+
+                string query = @"INSERT INTO Suppliers (SupplierName,Phone,Email,Address,CompanyId,BranchId)
+                                VALUES (@supplierName,@phone,@email,@address,@companyId,@branchId)";
+    
+                SqlParameter[] parameters =
+                {
+                    new SqlParameter("@supplierName",supplierDto.supplierName),
+                    new SqlParameter("@phone",supplierDto.phone),
+                    new SqlParameter("@email",supplierDto.email),
+                    new SqlParameter("@address",supplierDto.address),
+                    new SqlParameter("@companyId",supplierDto.companyId),
+                    new SqlParameter("@branchId",supplierDto.branchId)
+                };
+    
+                int rowsAffected = _dbHelper.Execute(query, parameters);
+    
+                return rowsAffected > 0;  
         }
 
        public bool EditSupplier(ClsSuppliers supplier)

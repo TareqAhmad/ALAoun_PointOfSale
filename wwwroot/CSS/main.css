@@ -106,5 +106,13 @@ body {
 
 }
 
+/* تنسيق مخصص للنص داخل التوست */
+.my-toast-title {
+    font-size: 18px !important;    /* تكبير حجم الخط */
+    font-weight: bold !important;  /* جعل الخط عريض */
+    font-family: 'Cairo', sans-serif; /* تغيير نوع الخط إذا أردت */
+    color: #ffffff !important;     /* لون النص */
+    margin: 0 10px !important;     /* مسافة جانبية */
+}
 
 /* End global Rules  */

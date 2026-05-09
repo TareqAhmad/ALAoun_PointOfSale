@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ALAoun_Pos.Controllers
 {
+      [SessionCheckFilter]
     public class SalesReturns : Controller
     {
         public IActionResult Index()

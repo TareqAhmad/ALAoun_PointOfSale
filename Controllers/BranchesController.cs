@@ -30,15 +30,8 @@ namespace ALAoun_Pos.Controllers
     
             return View(branches);
         }
+          
 
-         public List<ClsBranches> GetAllBranches(int companyId) 
-        {  
-            List<ClsBranches> BranchesList = new List<ClsBranches>(); 
-
-            BranchesList = _branchesService.GetAllBranches(companyId); 
-            
-            return BranchesList;
-        }
 
 
          [HttpGet]  
@@ -71,6 +64,30 @@ namespace ALAoun_Pos.Controllers
          public IActionResult Delete()
         {
             return View();
+        }
+
+
+         [HttpGet]
+         public List<ClsBranches> GetAllBranches(int companyId) 
+        {  
+            List<ClsBranches> BranchesList = new List<ClsBranches>(); 
+
+            BranchesList = _branchesService.GetAllBranches(companyId); 
+            
+            return BranchesList;
+        }
+
+        [HttpGet]
+         public IActionResult GetIdAndNameBranches(int companyId) 
+        {  
+        
+           var BranchesList = _branchesService.GetAllBranches(companyId); 
+           
+            var result = BranchesList.Select(b => new { 
+                Id = b.BranchId, 
+                Name = b.BranchName }).ToList(); 
+
+           return Json(result);
         }
 
     }

@@ -17,20 +17,34 @@ namespace ALAoun_Pos.Services
             {
                 _dbHelper = dbHelper;
             }
-        public List<ClsUsers> GetAllUsers(int companyId,int branchId)
+        public List<ClsUsers> GetAllUsers(int companyId,int branchId,int posId)
         {
 
             List<ClsUsers> users  = new List<ClsUsers>(); 
-
-            string query = @"SELECT UserId,UserName,PasswordHash,Phone,Email,RoleId
+            string query = "";  
+            if(posId > 0)
+            {
+                query = @"SELECT UserId,UserName,PasswordHash,Phone,Email,RoleId
                             FROM Users
                             WHERE companyId = @CompanyId
-                            AND branchId = @BranchId;"; 
+                            AND branchId = @BranchId 
+                            And posId = @posId";
+            }
+            else
+            {
+                 query = @"SELECT UserId,UserName,PasswordHash,Phone,Email,RoleId
+                            FROM Users
+                            WHERE companyId = @CompanyId
+                            AND branchId = @BranchId 
+                            OR posId = @posId"; 
+            }
+          
                
             SqlParameter[] parameters =
             {
                 new SqlParameter("@CompanyId", companyId),
-                new SqlParameter( "@BranchId" , branchId)
+                new SqlParameter( "@BranchId" , branchId),
+                new SqlParameter("@posId",posId)
                 
             };
 

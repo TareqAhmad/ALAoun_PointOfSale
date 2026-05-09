@@ -87,9 +87,21 @@ namespace ALAoun_Pos.Services
               
             
 
-            public bool AddCategory()
+            public bool AddCategory(CategoryDto categoryDto)
             {
-                return false; 
+                string query = @"INSERT INTO Categories (CategoryName,CompanyId,BranchId)
+                                VALUES (@categoryName,@companyId,@branchId);";
+
+                 SqlParameter[] parameters =
+                {
+                    new SqlParameter("@categoryName",categoryDto.categoryName),
+                    new SqlParameter("@companyId",categoryDto.companyId),
+                    new SqlParameter("@branchId",categoryDto.branchId)
+                };
+
+                int rowsAffected = _dbHelper.Execute(query, parameters);
+
+                return rowsAffected > 0;
             }
 
             public bool EditCategory(ClsCategories Category)

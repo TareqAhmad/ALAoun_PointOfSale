@@ -5,6 +5,7 @@ using ALAoun_Pos.Services.interfaces;
 
 namespace ALAoun_Pos.Controllers
 {
+    [SessionCheckFilter]
        public class CategoriesController : Controller
     {
              
@@ -21,13 +22,8 @@ namespace ALAoun_Pos.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-           int? companyId = HttpContext.Session.GetInt32("CompanyId"); 
-           int? branchId = HttpContext.Session.GetInt32("BranchId"); 
-
-           if (companyId == null || branchId == null)
-            {
-                return RedirectToAction("Home","index"); 
-            }
+            int? companyId = HttpContext.Session.GetInt32("CompanyId");
+            int? branchId = HttpContext.Session.GetInt32("BranchId");
 
             var Categories = _categoriesService.GetAllCategories(companyId.Value,branchId.Value); 
 
@@ -45,11 +41,6 @@ namespace ALAoun_Pos.Controllers
 
            int? companyId = HttpContext.Session.GetInt32("CompanyId"); 
            int? branchId = HttpContext.Session.GetInt32("BranchId"); 
-
-           if (companyId == null || branchId == null)
-            {
-                return RedirectToAction("Home","index"); 
-            }
 
             var Category = _categoriesService.GetCategoriesById(companyId.Value,branchId.Value,id); 
 
@@ -73,16 +64,61 @@ namespace ALAoun_Pos.Controllers
             int? companyId = HttpContext.Session.GetInt32("CompanyId"); 
            int? branchId = HttpContext.Session.GetInt32("BranchId"); 
 
-           if (companyId == null || branchId == null)
-            {
-                return RedirectToAction("Home","index"); 
-            }
-            
+  
             var Categories = _categoriesService.GetAllCategories(companyId.Value,branchId.Value); 
 
             return Json(Categories);
         }
+
+
+        [HttpGet]
+        public IActionResult GetIdAndNameCategories()
+        {
+            int? companyId = HttpContext.Session.GetInt32("CompanyId"); 
+           int? branchId = HttpContext.Session.GetInt32("BranchId"); 
+
+            var Categories = _categoriesService.GetAllCategories(companyId.Value,branchId.Value); 
+             
+             var result = Categories.Select(c => new 
+             {
+                 Id = c.CategoryId,
+                 Name = c.CategoryName
+             }).ToList();
+
+
+            return Json(result);
+        }
+   
+   
+        [HttpPost]
+        public IActionResult AddCategory([FromBody] CategoryDto categoryDto)
+        {
+            int? companyId = HttpContext.Session.GetInt32("CompanyId"); 
+            int? branchId = HttpContext.Session.GetInt32("BranchId"); 
+           
+             if(categoryDto == null || string.IsNullOrEmpty(categoryDto.categoryName))
+            {
+                return Json(new { success = false, message = "بيانات الفئة غير صالحة." });
+            }
+            
+            categoryDto.companyId = companyId.Value;
+            categoryDto.branchId = branchId.Value;
+
+            var result = _categoriesService.AddCategory(categoryDto); 
+            
+            if(result)
+            {
+                return Json(new { success = true, message = "تم إضافة الفئة بنجاح." });
+            }
+            else
+            {
+                return Json(new { success = false, message = "فشل في إضافة الفئة." });
+            }
+    
+        }
+   
     }
+    
 
 
 }

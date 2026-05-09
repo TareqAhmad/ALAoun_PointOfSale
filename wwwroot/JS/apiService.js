@@ -1,3 +1,36 @@
+/**
+ * 
+ *   use SeetAlert2 Library
+ */
+
+function showToast(msg, iconType = 'success') {
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'bottom-start', // المكان: أعلى اليمين
+        showConfirmButton: false,
+        timer: 5000, // يختفي بعد 3 ثوانٍ
+        timerProgressBar: true,
+        background:'#333',
+        color:'#fff',
+
+
+        customClass: {
+            title: 'my-toast-title' 
+        }
+    });
+
+    Toast.fire({
+        icon: iconType, // 'success', 'error', 'warning', 'info'
+        title: msg
+    });
+}
+
+
+//----------------------------------------------------
+
+
+
+
 
 function apiGetCompanyByUserCompany(userCompany,onSuccess,onError){
  
@@ -91,6 +124,19 @@ function apiLogin(userData,onSuccess,onError) {
 
 }
 
+function apiSetAuditLogin(transLogin,onSuccess,onError){
+
+    $.ajax({
+       url:"/AttendanceLogs/SetAuditLogin",
+       method:"POST",
+       contentType:"Application/json",
+       data:JSON.stringify(transLogin),
+       success:function(data){onSuccess(data)},
+       error:function(error){onError(error)}
+
+    }); 
+}
+
 function apiGetUsersPrivileges(userId,onSuccess,onError){
   
     $.ajax({
@@ -106,6 +152,110 @@ function apiGetUsersPrivileges(userId,onSuccess,onError){
         }       
      });
 };
+
+//---------------------------------------------------------------------
+
+function apiGetIdAndNameCompanies(userCompany,onSuccess,onError){
+  
+    $.ajax({
+        url:"/Companies/GetIdAndNameCompanies", 
+        method :"GET",
+        data : {userCompany : userCompany},
+        success:function(data)
+        {   onSuccess(data)     },          
+        error:function(xhr,status,error)
+        {            onError(error); 
+        }       
+     });
+};
+
+function apiGetIdAndNameBranches(companyId,onSuccess,onError){
+ 
+      $.ajax({
+            url:"/Branches/GetIdAndNameBranches",
+            method :"GET",
+            data : {companyId : companyId},
+            success:function(data)
+            {
+               onSuccess(data)    
+            },
+            error:function(xhr,status,error)
+            {
+                onError(error); 
+            }
+        }); 
+}          
+
+function apiGetIdAndNamePosPoints(companyId,branchId,onSuccess,onError){
+   
+  
+   
+    $.ajax({
+            url:"/PosPoints/GetIdAndNamePosPoints",
+            method :"GET",
+            data : {companyId : companyId, branchId : branchId},
+            success:function(data)
+            {
+               onSuccess(data)    
+            },
+            error:function(xhr,status,error)
+            {             onError(error);   
+
+            }
+        }); 
+}   
+
+function apiGetIdAndNameUsersByCompanyAndBranch(companyId,branchId,onSuccess,onError){
+   
+
+    $.ajax({
+            url:"/Users/GetIdAndNameUsers",
+            method :"GET",
+            data : {companyId : companyId, branchId : branchId},
+            success:function(data)
+            {
+               onSuccess(data)    
+            },
+            error:function(xhr,status,error)
+            {             onError(error);   
+
+            }
+        }); 
+}   
+
+function apiGetIdAndNameUsersByCompanyAndBranchAndPos(companyId,branchId,posId,onSuccess,onError){
+   
+  
+    $.ajax({
+            url:"/Users/GetIdAndNameUsers",
+            method :"GET",
+            data : {companyId : companyId, branchId : branchId, posId : posId},
+            success:function(data)
+            {
+               onSuccess(data)    
+            },
+            error:function(xhr,status,error)
+            {             onError(error);   
+
+            }
+        }); 
+}  
+
+function apiGetIdAndNamePaymentMethods(onSuccess,onError){
+      
+    $.ajax({
+            url:"/PaymentMethods/GetIdAndNamePaymentMethods",
+            method :"GET",
+            success:function(data)
+            {
+               onSuccess(data)    
+            },
+            error:function(xhr,status,error)
+            {             onError(error);   
+
+            }
+        }); 
+}
 
 // ------------------------------------------------------------
 
@@ -154,6 +304,22 @@ function apiGetAllProducts(onSuccess,onError) {
         });    
 }
 
+function apiGetProductsForOperations(onSuccess,onError)
+{
+    $.ajax({
+        url:"/Products/GetProductsForOperation",
+        method:"GET",
+        success: function(data) {
+            onSuccess(data); 
+        },
+        error:function(xhr,status,error) {
+                onError(error);
+                
+        }
+
+    });    
+}
+
 function apiGetAllPendingInvoices(onSuccess, onError) {
     $.ajax({
         url:"/PendingInvoices/GetAllPendingInvoices",
@@ -185,7 +351,7 @@ function apiGetAllSalesInvoices(onSuccess,onError) {
     });   
 }
 
-function apiGetAllPruchasesInvoices(onSuccess,onError) {
+function apiGetAllPurchasesInvoices(onSuccess,onError) {
       
     $.ajax({
         url:"PruchasesInvoices/GetAllPruchasesInvoices",
@@ -282,13 +448,16 @@ function apiGetPendingInvoice(id, onSuccess, onError){
     });
 }
 
+
+
+
 // -----------------------------------------------------------
 
 
 function apiAddCustomer(customerData,onSuccess,onError){
  
     $.ajax({
-        url: "/Customers/Create", 
+        url: "/Customers/AddCustomer", 
         method: "POST",
         contentType: "application/json", 
         data: JSON.stringify(customerData), 
@@ -305,7 +474,7 @@ function apiAddCustomer(customerData,onSuccess,onError){
 function apiAddSupplier(supplierData,onSuccess,onError){
  
     $.ajax({
-        url: "/Suppliers/Create", 
+        url: "/Suppliers/AddSupplier", 
         method: "POST",
         contentType: "application/json", 
         data: JSON.stringify(supplierData), 
@@ -318,38 +487,6 @@ function apiAddSupplier(supplierData,onSuccess,onError){
     });
 }
 
-function apiAddCategory(categoryData,onSuccess,onError){
- 
-    $.ajax({
-        url: "/Categories/Create", 
-        method: "POST",
-        contentType: "application/json", 
-        data: JSON.stringify(categoryData), 
-        success: function(response) {
-            onSuccess(response); 
-        },
-        error: function(xhr, status, error) {
-            onError(error); 
-        }
-    });
-}
-
-
-function apiAddProduct(productData,onSuccess,onError){
- 
-    $.ajax({
-        url: "/Products/Create", 
-        method: "POST",
-        contentType: "application/json", 
-        data: JSON.stringify(productData), 
-        success: function(response) {
-            onSuccess(response); 
-        },
-        error: function(xhr, status, error) {
-            onError(error); 
-        }
-    });
-}
 
 function apiAddPendingInvoice(pendingData,onSuccess,onError){
  
@@ -383,6 +520,95 @@ function apiAddSaleInvoice(SaleData,onSuccess,onError){
     });
 }
 
+function apiAddPurchaseInvoice(purchaseData,onSuccess,onError){
+ 
+    $.ajax({  
+        url:"/Purchases/AddInvoice",
+        method:"POST",
+        contentType:"Application/json",
+        data:JSON.stringify(purchaseData),
+        success:function(response){
+            onSuccess(response);
+        },
+        error:function(xhr,status,error){
+            onError(error); 
+        }
+      }); 
+}
+
+function apiAddExpense(ExpenseData,onSuccess,onError){
+ 
+    $.ajax({    }); 
+}   
+
+function apiAddUser(UserData,onSuccess,onError){
+ 
+    $.ajax({    }); 
+}
+
+function apiAddCompany(CompanyData,onSuccess,onError){
+ 
+    $.ajax({    }); 
+}  
+
+function apiAddBranch(BranchData,onSuccess,onError){
+ 
+    $.ajax({    }); 
+}   
+
+function apiAddPosPoint(PosPointData,onSuccess,onError){
+ 
+    $.ajax({    }); 
+}   
+
+function apiAddUnit(unitData,onSuccess,onError){
+ 
+    $.ajax({  
+
+        url: "/Units/AddUnit",
+        method: "POST",
+        contentType: "application/json",    
+        data: JSON.stringify(unitData),
+        success: function(response) {
+            onSuccess(response);    
+        },
+        error: function(xhr, status, error) {
+            onError(error);
+        }
+
+      }); 
+}
+function apiAddCategory(categoryData,onSuccess,onError){
+ 
+    $.ajax({
+        url: "/Categories/AddCategory", 
+        method: "POST",
+        contentType: "application/json", 
+        data: JSON.stringify(categoryData), 
+        success: function(response) {
+            onSuccess(response); 
+        },
+        error: function(xhr, status, error) {
+            onError(error); 
+        }
+    });
+}
+
+function apiAddProduct(productData,onSuccess,onError){
+ 
+    $.ajax({
+        url: "/Products/AddProduct", 
+        method: "POST",
+        contentType: "application/json", 
+        data: JSON.stringify(productData), 
+        success: function(response) {
+            onSuccess(response); 
+        },
+        error: function(xhr, status, error) {
+            onError(error); 
+        }
+    });
+}
 
 // ---------------------------------------------------
 
@@ -632,10 +858,10 @@ function apiGetSumExpenses(onSuccess,onError)
     });
 }
 
-function apiGetSumnetCash(onSuccess,onError)
+function apiGetSumNetCash(onSuccess,onError)
 {
          $.ajax({
-        url: "/SalesInvoices/GetSumSales", 
+        url: "/SalesInvoices/GetSumNetCash", 
         method: "GET",
         success: function(data) {
             onSuccess(data); 
@@ -646,7 +872,78 @@ function apiGetSumnetCash(onSuccess,onError)
     });
 }
 
-function apiGetTaxRateForProduct(productId,onSuccess,onError){
+// -----------------------------------------------------------
+  /**
+   * 
+   *  Services For Products
+   */
+
+
+  function apiGetIdAndNameCategories(onSuccess,onError){
+
+     $.ajax({
+        url: "/Categories/GetIdAndNameCategories", 
+        method: "GET",
+        success: function(response) {   onSuccess(response); },
+        error: function(xhr, status, error) { onError(error); }
+      }); 
+  }
+
+function apiGetIdAndNameProducts(onSuccess,onError){
+        $.ajax({   
+        url: "/Products/GetIdAndNameProducts", 
+        method: "GET",
+        success: function(response) {   onSuccess(response); },
+        error: function(xhr, status, error) { onError(error); }
+       });
+
+
+        
+}
+
+ function apiGetIdAndNameTaxies(onSuccess,onError){
+
+     $.ajax({
+        url: "/Taxies/GetIdAndNameTaxies", 
+        method: "GET",
+        success: function(response) {   onSuccess(response); },
+        error: function(xhr, status, error) { onError(error); }
+     })
+ }
+
+  function apiGetIdAndNameCustomers(onSuccess,onError){
+
+     $.ajax({
+        url: "/Customers/GetIdAndNameCustomers", 
+        method: "GET",
+        success: function(response) {   onSuccess(response); },
+        error: function(xhr, status, error) { onError(error); }
+      }); 
+  }
+
+  function apiGetIdAndNameSuppliers(onSuccess,onError){
+
+     $.ajax({ 
+        url: "/Suppliers/GetIdAndNameSuppliers", 
+        method: "GET",
+        success: function(response) {   onSuccess(response); },
+        error: function(xhr, status, error) { onError(error); }
+       }); 
+  }
+
+
+
+  function apiGetIdAndNameUnits(onSuccess,onError){
+
+     $.ajax({ 
+        url: "/Units/GetIdAndNameUnits", 
+        method: "GET",
+        success: function(response) {   onSuccess(response); },
+        error: function(xhr, status, error) { onError(error); }
+       }); 
+  }
+
+  function apiGetTaxRateForProduct(productId,onSuccess,onError){
 
      $.ajax({
         url: "/Products//" + productId, 

@@ -69,5 +69,27 @@ namespace ALAoun_Pos.Controllers
             return View();
         }
 
+        [HttpGet]
+        public IActionResult GetIdAndNameCompanies(string userCompany)
+        {
+           
+            var Company = companiesService.GetCompanyByUserCompany(userCompany); 
+             
+             if (Company == null) return NotFound();
+
+             var result =  new {
+                
+                Id = Company.CompanyId,
+                Name = Company.CompanyName
+              };
+
+             return Json(result);     
+   
+        }
+        
+        
+        
+
+
     }
 }

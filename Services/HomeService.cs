@@ -23,7 +23,7 @@ namespace ALAoun_Pos.Services
             ClsUserInfo user = null;    
            string query = ""; 
      
-              query  = @"SELECT U.userId,U.userName,U.RoleId,U.CompanyId,U.BranchId,U.PosId,C.companyName,B.BranchName,P.PosName
+              query  = @"SELECT U.userId,U.userName,U.RoleId,U.CompanyId,U.BranchId,U.PosId,C.companyName,C.isActive,B.BranchName,P.PosName
                             FROM Users U JOIN Companies C ON U.CompanyId = C.CompanyId
                                         JOIN Branches B ON U.BranchId = B.BranchId
                                         LEFT JOIN PosPoints P ON U.PosId = P.PosId
@@ -33,9 +33,6 @@ namespace ALAoun_Pos.Services
                             AND U.branchId = @branchId
                             AND  (U.RoleId = 1  OR IsNULL(U.posId, 0) = @posId)";
         
-
-
-     
                            
 
           SqlParameter[] parameters =
@@ -63,8 +60,9 @@ namespace ALAoun_Pos.Services
                   BranchId = Convert.ToInt32(row[4]),
                   PosId  =  (row[5] == DBNull.Value) ? 0 : Convert.ToInt32(row[5]),
                   CompanyName = row[6].ToString(),
-                  BranchName = row[7].ToString(),
-                  PosName = row[8].ToString()
+                  IsActive = Convert.ToBoolean(row[7]),
+                  BranchName = row[8].ToString(),
+                  PosName = row[9].ToString()
                 }; 
           }
             
