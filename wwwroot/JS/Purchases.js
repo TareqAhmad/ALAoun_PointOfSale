@@ -12,21 +12,23 @@ let netInvoice = 0;
 $(document).ready(function(){
 
 
-     initializePage()
+    initializePage()
+
 
     $("#productSearch").on("keypress",function(e){
+       
         if(e.which === 13)
         {
-        let code = $(this).val().trim(); 
-        if(code !== "") handleBarcodeScan(code);
-        $(this).val(""); 
-        e.preventDefault();
+            let code = $(this).val().trim(); 
+            if(code !== "") handleBarcodeScan(code);
+            $(this).val(""); 
+            e.preventDefault();
         }
 
 
     }); 
 
-    $("#btnSavePurchase").on("click",SavePurchaseInvoice()); 
+    $("#btnSave").on("click",SavePurchaseInvoice); 
 
 
 }); 
@@ -39,8 +41,8 @@ function initializePage() {
     loadAllSuppliers(); 
     loadAllProducts();
     loadAllPaymentMethods(); 
+    renderCart(); 
     
-    /*loadCart(); */
 }
 
 
@@ -116,6 +118,8 @@ function handleBarcodeScan(code){
   
 }
 
+//----------------------------------------------
+
 function addToCartPurchase(productId)
 {
     let product = allProducts.find(p => p.productId == productId); 
@@ -128,7 +132,6 @@ function addToCartPurchase(productId)
    }
    else{
         CartPurchases.push({
-                    itemId: CartPurchases.length + 1,
                     productId: product.productId,
                     productName: product.productName,
                     purchasePrice: product.purchasePrice,
@@ -138,28 +141,41 @@ function addToCartPurchase(productId)
         }); 
     }
   
-   localStorage.setItem("CartPurchases", JSON.stringify(CartPurchases)); 
+   saveCartInLocalStorage(); 
    renderCart();
 
 }
 
-function renderCart() {
-    let tbody = $("#purchaseItemsBody"); 
-    tbody.empty();
+function saveCartInLocalStorage() {
+    localStorage.setItem("CartPurchases", JSON.stringify(CartPurchases));  
+    let supplierId =parseInt($("#supplierSelect").val() || 0); 
+    localStorage.setItem("supplierId", supplierId); 
+    let paymentId =parseInt($("#paymentMethod").val() || 0); 
+    localStorage.setItem("paymentId",paymentId); 
 
-    // 1. تصفير الإجماليات العامة قبل إعادة الحساب
+}
+
+function renderCart() {
+
+    let currentCart = JSON.parse(localStorage.getItem("CartPurchases") || []); 
+   
     subTotalInvoice = 0;
     totalDiscountInvoice = 0;
     totalTaxInvoice = 0;
     netInvoice = 0;
+    let counter = 0; 
+    
+    let tbody = $("#purchaseItemsBody"); 
+    tbody.empty();
 
-    CartPurchases.forEach((item) => {
-        // 2. حساب إجمالي السطر
+    currentCart.forEach((item) => {
+
         let rowTotal = calculateRowTotal(item.quantity, item.purchasePrice, item.tax, item.discount);
 
         const row = ` 
             <tr data-id="${item.productId}"> 
-                <td><button class="bi bi-trash-fill text-danger fs-4" onclick="deleteFromCartById(${item.productId})"></button></td>
+                <td class="text-center"><button class="bi bi-trash-fill text-danger fs-3" onclick="deleteFromCartById(${item.productId})"></button></td>
+                <td class= "text-center">${++counter}</td>
                 <td class="text-end">${item.productName}</td>
                 <td class="fw-bold">${item.quantity}</td>
                 <td>${item.purchasePrice}</td>
@@ -172,6 +188,20 @@ function renderCart() {
 
     // 3. تحديث واجهة الإجماليات النهائية بعد انتهاء الحلقة
     updateInvoiceSummaryLabels();
+}
+
+function deleteFromCartById(productId){
+
+  let cartTemp = JSON.parse(localStorage.getItem("cart"));
+  
+  let updateCart = cartTemp.filter(p => p.productId !== productId); 
+
+  localStorage.setItem("cart",JSON.stringify(updateCart)); 
+
+  renderCart();
+  
+  location.reload(); 
+
 }
 
 function calculateRowTotal(quantity, price, taxRate, discountAmount) {
@@ -193,6 +223,18 @@ function calculateRowTotal(quantity, price, taxRate, discountAmount) {
 
     return totalLine;
 }
+
+
+function clearCart() {
+    CartPurchases = []; 
+    renderCart(); 
+    localStorage.removeItem("CartPurchases");
+    localStorage.removeItem("supplierId");
+    ["#totalAmount", "#discountAmount", "#taxAmount", "#netAmount"].forEach(id => $(id).text("0.000"));
+}
+
+// --------------------------------------------------------
+
 
 function updateInvoiceSummaryLabels() {
     $("#txtPurchaseTotal").text(subTotalInvoice.toFixed(3)); 

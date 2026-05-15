@@ -108,10 +108,11 @@ function setupEventListeners(){
 // --- 4. Cart & Calculations Logic ---
 
 function addToCart(productId) {
-   
+
+
+
     let product = allProducts.find(p => p.productId == productId); 
     if (!product) return;
-    
     
     let existing = cart.find(c => c.productId == productId); 
 
@@ -121,28 +122,35 @@ function addToCart(productId) {
     else 
     {
         cart.push({
-            itemId: cart.length + 1,
             productId: product.productId,
             productName: product.productName,
-            price: product.productPrice,
+            price: (product.productPrice).toFixed(3),
             quantity: 1,
-            taxRate: product.taxRate || 0,
+            taxRate:(product.taxRate/100) || 0,
             itemDiscount: 0
         });
     }
+
     saveCartInLocalStorage(); 
     renderCart(); 
 }
 
 function renderCart() {
+    
+    let currentCart = JSON.parse(localStorage.getItem("cart")) || [];
+
     let tbody = $("#cartTableBody"); 
     tbody.empty();
-    
-    cart.forEach((item) => {
+    let counter = 0; 
+
+    currentCart.forEach((item) => {
+        
+        counter++; 
+        
         const row = ` 
             <tr data-id="${item.productId}" style="cursor:pointer;"> 
                 <td><button class="bi bi-trash-fill text-danger fs-4" onclick="deleteFromCartById(${item.productId})"></button></td>
-                <td>${item.itemId}</td>
+                <td>${counter}</td>
                 <td class="text-end">${item.productName}</td>
                 <td class="fw-bold">${item.quantity}</td>
                 <td>${item.price}</td>
@@ -150,10 +158,25 @@ function renderCart() {
             </tr>`; 
         tbody.append(row);
     });
-    calculateTotals(); 
+      calculateTotals(); 
+}
+
+function deleteFromCartById(productId){
+
+  let cartTemp = JSON.parse(localStorage.getItem("cart"));
+  
+  let updateCart = cartTemp.filter(p => p.productId !== productId); 
+
+  localStorage.setItem("cart",JSON.stringify(updateCart)); 
+
+  renderCart();
+  
+  location.reload(); 
+
 }
 
 function calculateTotals() {
+   
     let subTotal = 0, totalTax = 0, itemsDiscountSum = 0;
 
     cart.forEach(item => {
@@ -263,9 +286,9 @@ function loadAllCategories() {
 
 function loadAllProducts() {
     
-    apiGetIdAndNameProducts(
+    apiGetProductsForOperations(
         function(data) {
-        allProducts = data; 
+           allProducts = data; 
              displayProducts();
         },
         function(error)
@@ -379,11 +402,11 @@ function renderProductCards(productsArray) {
 
     productsArray.forEach(p => {
         container.append(`
-            <div class="btn btn-light border rounded d-flex flex-column p-1" style="width:10rem; height:8rem;" onclick="addToCart(${p.id})">
+            <div class="btn btn-light border rounded d-flex flex-column p-1" style="width:10rem; height:8rem;" onclick="addToCart(${p.productId})">
                 <div class="flex-grow-1 d-flex justify-content-center align-items-center">
-                    <img src="/Images/${p.icon}.png" onerror="this.src='/Images/default.png'" style="max-height:60px; max-width:100%;">
+                    <img src="/Images/${p.iconId}.png" onerror="this.src='/Images/default.png'" style="max-height:60px; max-width:100%;">
                 </div>
-                <div class="text-center fw-bold text-wrap bg-alter">${p.name}</div>
+                <div class="text-center fw-bold text-wrap bg-alter">${p.productName}</div>
             </div>`);
     });
 }

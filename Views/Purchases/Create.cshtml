@@ -34,14 +34,15 @@
         <!-- قسم إضافة الأصناف -->
         <div class="row align-items-end mb-3 g-2">
             <div class="col-md-5">
-                <label class="form-label fw-bold text-success">إضافة صنف للفاتورة (باركود أو اسم)</label>
+                <label class="form-label fw-bold text-success">إضافة صنف للفاتورة (باركود)</label>
                 <input type="text" id="productSearch" class="form-control fs-4 border-success" placeholder="امسح الباركود أو ابحث عن المنتج...">
             </div>
+             @*
             <div class="col-md-2">
-                <button type="button" id="btnOpenProducts" class="btn btn-outline-success w-100 fs-5">
+               <button type="button" id="btnOpenProducts" class="btn btn-outline-success w-100 fs-5">
                     <i class="fa fa-search"></i> بحث متقدم
                 </button>
-            </div>
+            </div>*@
         </div>
 
         <!-- جدول الأصناف الديناميكي -->
@@ -50,6 +51,7 @@
                 <thead class="table-dark">
                     <tr class="text-center">
                         <th style="width: 5%;">X</th>
+                        <th style="width: 5%;">#</th>
                         <th style="width: 30%;">اسم المنتج</th>
                         <th style="width: 10%;">الكمية</th>
                         <th style="width: 10%;">سعر الشراء</th>
@@ -57,7 +59,7 @@
                         <th style="width: 10%;">الضريبة</th>
                         <th style="width: 15%;">الإجمالي</th>
                     </tr>
-                </thead>
+                </thead>                                                                                                                  
                 <tbody id="purchaseItemsBody">
                     <!-- سيتم إضافة الصفوف هنا برمجياً -->
                 </tbody>
@@ -93,7 +95,7 @@
 
         <!-- أزرار التحكم -->
         <div class="mt-4 border-top pt-3">
-            <button type="button" id="btnSavePurchase" class="btn btn-success btn-lg fs-4 px-5">
+            <button type="button" id="btnSave" class="btn btn-success btn-lg fs-4 px-5">
                 <i class="fa fa-save"></i> حفظ الفاتورة (F10)
             </button>
             <button type="button" class="btn btn-secondary btn-lg fs-4 px-4 ms-2" onclick="location.reload()">

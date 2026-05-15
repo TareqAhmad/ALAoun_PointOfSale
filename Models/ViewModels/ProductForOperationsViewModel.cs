@@ -11,6 +11,7 @@ namespace ALAoun_Pos.Models
         public decimal productPrice {get;set;}
         public decimal purchasePrice {get;set;}
         public decimal productCost {get;set;}
+        public int iconId {get; set;}
         public decimal taxRate {get;set;}
         public decimal discountRate {get;set;}
 

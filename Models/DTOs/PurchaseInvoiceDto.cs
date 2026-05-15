@@ -1,30 +1,26 @@
 namespace ALAoun_Pos.Models
 {
-    public class PurchaseInvoiceDto
+    public class InvoiceDto
     {
-        public DateTime purchaseDate {get;set;}
-        public decimal PurchaseTotal { get; set; }
-        public decimal DiscountAmount { get; set; }
-        public decimal TaxAmount { get; set; }
-        public decimal NetAmount { get; set; }
-        public int SupplierId { get; set; }
-        public int PaymentId { get; set; }
+        public DateTime InvoiceDate {get;set;}
+        public int PersonId {get;set;} = 0; 
+        public int PaymentMethodId { get; set; } = 0; 
         public int CompanyId {get; set;}
-        public int branchId {get;set;}
-        public int posId {get;set;}
-        public int userId {get; set;}
+        public int BranchId {get;set;}
+        public int PosId {get;set;}
+        public int UserId {get; set;}
 
         // قائمة العناصر المرسلة من الجدول في المتصفح
-        public List<PurchaseItemDto> Items { get; set; } = new List<PurchaseItemDto>();
+        public List<InvoiceItemDto> Items { get; set; } = new List<InvoiceItemDto>();
     }
 
-    public class PurchaseItemDto
+    public class InvoiceItemDto
     {
         public int ProductId { get; set; }
         public decimal Quantity { get; set; }
         public decimal UnitPrice { get; set; }
-        public decimal DiscountAmount { get; set; }
-        public decimal TaxAmount { get; set; }
-        public decimal TotalAfterTax { get; set; }
+        public decimal TaxPercent { get; set; }
+        public decimal DiscountPercent { get; set; }
+
     }
 }

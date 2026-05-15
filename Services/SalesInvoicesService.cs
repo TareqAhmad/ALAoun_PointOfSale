@@ -77,12 +77,9 @@ namespace ALAoun_Pos.Services
             return new SalesInvoiceVM();
         }
 
-        public bool AddSalesInvoice(int companyId, int branchId, int posId, int userId, SalesInvoiceDto salesInvoiceDto)
+        public bool AddSaleInvoice(InvoiceDto salesInvoiceDto)
         {
-            var items = salesInvoiceDto.Items;
-            decimal totalAmount = items.Sum(i => i.UnitPrice * i.quantity);
-            decimal netAmount = totalAmount;
-
+        
             // الحصول على نص الاتصال من DBHelper (أو من Configuration مباشرة)
             using (SqlConnection conn = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
             {
@@ -97,18 +94,17 @@ namespace ALAoun_Pos.Services
                                         SELECT CAST(SCOPE_IDENTITY() AS INT);";
 
                         SqlParameter[] parameters = {
-                            new SqlParameter("@companyId", companyId),
-                            new SqlParameter("@branchId", branchId),
-                            new SqlParameter("@posId", posId),
-                            new SqlParameter("@userId", userId),
-                            new SqlParameter("@customerId", salesInvoiceDto.customerId),
-                            new SqlParameter("@invoiceTypeId", salesInvoiceDto.InvoiceTypeId),
+                            new SqlParameter("@companyId", salesInvoiceDto.CompanyId),
+                            new SqlParameter("@branchId",salesInvoiceDto.BranchId),
+                            new SqlParameter("@posId", salesInvoiceDto.PosId),
+                            new SqlParameter("@userId", salesInvoiceDto.UserId),
+                            new SqlParameter("@customerId", salesInvoiceDto.PersonId),
                             new SqlParameter("@discountId", DBNull.Value),
                             new SqlParameter("@taxId", DBNull.Value),
-                            new SqlParameter("@paymentId", salesInvoiceDto.PaymentId),
-                            new SqlParameter("@quantityItems", items.Count),
-                            new SqlParameter("@totalAmount", totalAmount),
-                            new SqlParameter("@netAmount", netAmount)
+                            new SqlParameter("@paymentId", salesInvoiceDto.PaymentMethodId),
+                            new SqlParameter("@quantityItems", salesInvoiceDto.Items.Count),
+                            new SqlParameter("@totalAmount", DBNull.Value),
+                            new SqlParameter("@netAmount", DBNull.Value)
                         };
 
                         // تنفيذ جلب الـ ID باستخدام الترانزاكشن
@@ -117,19 +113,19 @@ namespace ALAoun_Pos.Services
                         if (invoiceId > 0)
                         {
                             // 2. حلقة إدخال الأصناف
-                            foreach (var item in items)
+                            foreach (var item in salesInvoiceDto.Items)
                             {
                                 string itemQuery = @"INSERT INTO SalesInvoiceItems (invoiceId, ProductId, Quantity, DiscountId, TaxId, UnitPrice, TotalPrice)
                                                     VALUES (@invoiceId, @productId, @quantity, @discountId, @taxId, @unitPrice, @totalPrice);";
 
                                 SqlParameter[] itemParameters = {
                                     new SqlParameter("@invoiceId", invoiceId),
-                                    new SqlParameter("@productId", item.productId),
-                                    new SqlParameter("@quantity", item.quantity),
+                                    new SqlParameter("@productId", item.ProductId),
+                                    new SqlParameter("@quantity", item.Quantity),
                                     new SqlParameter("@discountId", DBNull.Value),
                                     new SqlParameter("@taxId", DBNull.Value),
                                     new SqlParameter("@unitPrice", item.UnitPrice),
-                                    new SqlParameter("@totalPrice", item.UnitPrice * item.quantity)
+                                    new SqlParameter("@totalPrice", item.UnitPrice * item.Quantity)
                                 };
 
                                 // تنفيذ إدخال الصنف تحت نفس الترانزاكشن
@@ -157,6 +153,8 @@ namespace ALAoun_Pos.Services
                 }
             }
         }
+      
+      
         public bool EditSalesInvoice(int companyId, int branchId,SalesInvoiceDto salesInvoiceDto)
         {
             return false; 

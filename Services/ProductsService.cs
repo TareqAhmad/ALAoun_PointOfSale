@@ -160,7 +160,7 @@ namespace ALAoun_Pos.Services
         {
             var products = new List<ProductForOperationsViewModel>(); 
 
-            string query = @"SELECT P.productId,P.barcode,P.productName,P.productPrice,P.purchasePrice,P.productCost,T.taxRate,D.discountRate
+            string query = @"SELECT P.productId,P.barcode,P.productName,P.productPrice,P.purchasePrice,P.productCost,P.iconId,T.taxRate,D.discountRate
                             FROM Products P left JOIN Taxies T ON P.taxId = T.TaxId
                                             left JOIN Discounts D ON P.discountId = D.DiscountId
                             WHERE P.companyId = @companyId
@@ -184,8 +184,9 @@ namespace ALAoun_Pos.Services
                      productPrice = row[3] == DBNull.Value ? 0 : Convert.ToDecimal(row[3]),
                      purchasePrice = row[4] == DBNull.Value ? 0 : Convert.ToDecimal(row[4]),
                      productCost = row[5] == DBNull.Value ? 0 : Convert.ToDecimal(row[5]),
-                     taxRate = row[6] == DBNull.Value ? 0 : Convert.ToDecimal(row[6]),
-                     discountRate = row[7] == DBNull.Value ? 0 : Convert.ToDecimal(row[7])
+                     iconId  = row[6] == DBNull.Value ? 0 : Convert.ToInt32(row[6]),
+                     taxRate = row[7] == DBNull.Value ? 0 : Convert.ToDecimal(row[7]),
+                     discountRate = row[8] == DBNull.Value ? 0 : Convert.ToDecimal(row[8])
                  };
                   products.Add(product); 
             }

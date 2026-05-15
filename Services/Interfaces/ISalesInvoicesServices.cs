@@ -10,7 +10,7 @@ namespace ALAoun_Pos.Services.interfaces
 
         public SalesInvoiceVM GetSalesInvoice(int companyId, int branchId,int posId,int id);
 
-        public bool AddSalesInvoice(int companyId, int branchId,int posId,int userId,SalesInvoiceDto salesInvoiceDto);
+        public bool AddSaleInvoice(InvoiceDto salesInvoiceDto);
 
         public bool EditSalesInvoice(int companyId, int branchId,SalesInvoiceDto salesInvoiceDto);
 

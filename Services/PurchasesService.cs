@@ -64,7 +64,7 @@ namespace ALAoun_Pos.Services
             return new PurchaseInvoicesVM(); 
         }
 
-        public bool AddPurchaseInvoice(PurchaseInvoiceDto purchaseInvoicesDto)
+        public bool AddPurchaseInvoice(InvoiceDto purchaseInvoicesDto)
         {
             return false; 
         }

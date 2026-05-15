@@ -35,14 +35,22 @@ namespace ALAoun_Pos.Controllers
         }
           
          [HttpPost] 
-        public IActionResult Create([FromBody] SalesInvoiceDto salesInvoiceDto)
+        public IActionResult Create([FromBody] InvoiceDto salesInvoiceDto)
         {
             int? companyId = HttpContext.Session.GetInt32("CompanyId"); 
             int? branchId = HttpContext.Session.GetInt32("BranchId");
             int? posId = HttpContext.Session.GetInt32("PosId"); 
             int? userId = HttpContext.Session.GetInt32("UserId");
 
-            var Result =  _salesInvoicesService.AddSalesInvoice(companyId.Value,branchId.Value,posId.Value,userId.Value,salesInvoiceDto); 
+
+            salesInvoiceDto.InvoiceDate  = DateTime.Now; 
+            salesInvoiceDto.CompanyId = companyId.Value; 
+            salesInvoiceDto.BranchId = branchId.Value; 
+            salesInvoiceDto.PosId = posId.Value; 
+            salesInvoiceDto.UserId = userId.Value; 
+
+
+            var Result =  _salesInvoicesService.AddSaleInvoice(salesInvoiceDto); 
 
              return Json(Result);
         }
@@ -102,6 +110,35 @@ namespace ALAoun_Pos.Controllers
      
         }
 
+        [HttpPost]
+        public IActionResult AddInvoice([FromBody] InvoiceDto invoiceDto)
+        {
+
+            if(invoiceDto == null)
+            {
+                return Json(new {success= false,message="البيانات غير مكتملة"});
+            }
+
+            int? companyId = HttpContext.Session.GetInt32("CompanyId"); 
+            int? branchId = HttpContext.Session.GetInt32("BranchId"); 
+            int? posId = HttpContext.Session.GetInt32("PosId");
+            int? userId = HttpContext.Session.GetInt32("UserId");  
+
+            invoiceDto.InvoiceDate = DateTime.Now; 
+            invoiceDto.CompanyId= companyId.Value; 
+            invoiceDto.BranchId = branchId.Value;
+            invoiceDto.PosId = posId.Value;
+            invoiceDto.UserId = userId.Value; 
+
+
+            var result = _salesInvoicesService.AddSaleInvoice(invoiceDto); 
+            
+
+           return Json(new{success = false,message = "حدث خطا اثناء حفظ الفاتورة"});  
+        }
+   
+   
+   
     }
 
 }

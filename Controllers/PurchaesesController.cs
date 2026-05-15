@@ -46,10 +46,10 @@ namespace ALAoun_Pos.Controllers
 
 
         [HttpPost]
-        public IActionResult AddInvoice([FromBody] PurchaseInvoiceDto purchaseInvoiceDto)
+        public IActionResult AddInvoice([FromBody] InvoiceDto invoiceDto)
         {
 
-            if(purchaseInvoiceDto == null)
+            if(invoiceDto == null)
             {
                 return Json(new {success= false,message="البيانات غير مكتملة"});
             }
@@ -59,14 +59,14 @@ namespace ALAoun_Pos.Controllers
             int? posId = HttpContext.Session.GetInt32("PosId");
             int? userId = HttpContext.Session.GetInt32("UserId");  
 
-            purchaseInvoiceDto.purchaseDate = DateTime.Now; 
-            purchaseInvoiceDto.CompanyId= companyId.Value; 
-            purchaseInvoiceDto.branchId = branchId.Value;
-            purchaseInvoiceDto.posId = posId.Value;
-            purchaseInvoiceDto.userId = userId.Value; 
+            invoiceDto.InvoiceDate = DateTime.Now; 
+            invoiceDto.CompanyId= companyId.Value; 
+            invoiceDto.BranchId = branchId.Value;
+            invoiceDto.PosId = posId.Value;
+            invoiceDto.UserId = userId.Value; 
 
 
-            var result = _purchasesService.AddPurchaseInvoice(purchaseInvoiceDto); 
+            var result = _purchasesService.AddPurchaseInvoice(invoiceDto); 
             
 
            return Json(new{success = false,message = "حدث خطا اثناء حفظ الفاتورة"});  
